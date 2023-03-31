@@ -19,6 +19,6 @@ Visualizations of biomass outputs from the APEX model and comparison to field da
   * Identifying information for each pasture subarea
   
  * Remote Sensing Data
-  * CPER NDVI
-  * CPER biomass mean: biomass estimates derived from NDVI by Sean Kearney (kg/ha)
+   * CPER NDVI
+   * CPER biomass mean: biomass estimates derived from NDVI by Sean Kearney (kg/ha)
   
