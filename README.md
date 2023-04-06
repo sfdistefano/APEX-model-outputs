@@ -2,7 +2,7 @@
 Visualizations of biomass outputs from the APEX model and comparison to field data and remote sensing results.
 
 ## Data Types
-* .SAD = biomass output file from APEX
+* .SAD = biomass and soil water output file from APEX
   * Biomass should be the sum of STL + STD + GZSLkg/ha + GZSD/ha
   * STL = standing live (Mg/ha)
   * STD = standing dead (Mg/ha)
@@ -10,6 +10,7 @@ Visualizations of biomass outputs from the APEX model and comparison to field da
   * GZSDkg/ha = standing dead grazed (kg/ha)
   * A_DDM = plant daily growth after accounting for plant stress (Mg/ha)
   * BIOM = total above and belowground biomass, doesn't include dead material (Mg/ha)
+  * X-XCM = volumetric water content between the specified depths
 
 * CARM Biomass
   * Biomass clipped from grazing exclosure cages (kg/ha) for each plant functional group
