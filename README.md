@@ -11,6 +11,8 @@ Visualizations of biomass outputs from the APEX model and comparison to field da
   * A_DDM = plant daily growth after accounting for plant stress (Mg/ha)
   * BIOM = total above and belowground biomass, doesn't include dead material (Mg/ha)
   * X-XCM = volumetric water content between the specified depths
+  
+* CPER = Central Plains Experimental Range (CPER), Nunn, CO, USA
 
 * CARM Biomass
   * Biomass clipped from grazing exclosure cages (kg/ha) for each plant functional group
@@ -22,4 +24,7 @@ Visualizations of biomass outputs from the APEX model and comparison to field da
  * Remote Sensing Data
    * CPER NDVI
    * CPER biomass mean: biomass estimates derived from NDVI by Sean Kearney (lbs/acre)
+   
+ * Soil Moisture
+   * Soil moisture data collected at CPER (volumetric water content [%])
   
