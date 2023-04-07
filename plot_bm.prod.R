@@ -76,9 +76,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
     field <- biomass.pasture %>% filter(Pasture == past.name & CPNM2 == func.group)
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM, group = CPNM, 
-                                   color = CPNM)) +
-      geom_point(data = field, aes(x = date, y = Biomass, color = Pasture)) +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_point(data = field, aes(x = date, y = Biomass)) +
       geom_errorbar(data = field,
                     aes(x = date, ymin = Biomass - se, ymax = Biomass + se),
                     width = 10) +
@@ -87,7 +86,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       theme_bw() +
       ylab("Biomass Production (kg/ha)") +
       xlab("Month of the Year (Jun - Oct)") +
-      labs(color = "Biomass")
+      labs(color = "Biomass") +
+      ggtitle(paste("Pasture", past.name, "CPNM = ", func.group))
     
     return(plot)
     
@@ -109,9 +109,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
     
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM,
-                                   color = CPNM, group = CPNM)) +
-      geom_point(data = field, aes(x = date, y = Biomass_mean, color = Ecosite)) +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_point(data = field, aes(x = date, y = Biomass_mean)) +
       geom_errorbar(data = field,
                     aes(x = date, ymin = Biomass_mean - se, ymax = Biomass_mean + se),
                     width = 10) +
@@ -119,7 +118,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       scale_x_date(date_breaks = "1 month",date_labels = "%m") +
       theme_bw() +
       ylab("Biomass Production (kg/ha)") +
-      xlab("Month of the Year (Jun - Oct)")
+      xlab("Month of the Year (Jun - Oct)") +
+      ggtitle(paste("Ecosite", ecosite, "CPNM = ", func.group))
     
     return(plot)
     
@@ -137,8 +137,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       filter(Pasture == past.name)
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Total")) +
-      geom_point(data = field, aes(x = date, y = Biomass_total, color = Pasture)) +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_point(data = field, aes(x = date, y = Biomass_total)) +
       geom_errorbar(data = field,
                     aes(x = date, ymin = Biomass_total - se, ymax = Biomass_total + se),
                     width = 10) +
@@ -147,7 +147,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       theme_bw() +
       ylab("Biomass Production (kg/ha)") +
       xlab("Month of the Year (Jun - Oct)") +
-      labs(color = "Biomass")
+      labs(color = "Biomass") +
+      ggtitle(paste("Pasture", past.name, "TOTAL biomass"))
     
     return(plot)
   }
@@ -162,23 +163,28 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       filter(Ecosite == ecosite)
     
     field <- biomass.pasture %>%
-      group_by(date, Y, Ecosite) %>%
+      group_by(date, Y, Ecosite, Pasture) %>%
       summarize(Biomass_total = sum(Biomass), 
                 se = sd(Biomass)/sqrt(length(Biomass))) %>%
+      group_by(date, Y, Ecosite) %>%
+      summarize(Biomass_mean = mean(Biomass_total),
+                se = sd(Biomass_total)/sqrt(length(Biomass_total))) %>%
       filter(Ecosite == ecosite)
     
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Total")) +
-      geom_point(data = field, aes(x = date, y = Biomass_total, color = Ecosite)) +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_point(data = field, aes(x = date, y = Biomass_mean)) +
       geom_errorbar(data = field,
-                    aes(x = date, ymin = Biomass_total - se, ymax = Biomass_total + se),
+                    aes(x = date, ymin = Biomass_mean - se,
+                        ymax = Biomass_mean + se),
                     width = 10) +
       facet_wrap(.~Y, scales = "free_x") +
       scale_x_date(date_breaks = "1 month",date_labels = "%m") +
       theme_bw() +
       ylab("Biomass Production (kg/ha)") +
-      xlab("Month of the Year (Jun - Oct)")
+      xlab("Month of the Year (Jun - Oct)") +
+      ggtitle(paste("Ecosite", ecosite, "TOTAL biomass"))
     
     return(plot)
     
