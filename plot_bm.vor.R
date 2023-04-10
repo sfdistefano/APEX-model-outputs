@@ -24,18 +24,28 @@ rs.biomass <- read.csv("cper_biomass_means_2014_2022.csv") %>%
          Biomass_kg_ha = Biomass_lbs_ac*1.121)
 
 ## Field VOR biomass data (biomass left after grazing)
-field.biomass <- read.csv("cper_vor_june_oct_2013_2021.csv")
+field.biomass_jun <- read.csv("CPER VOR/CARM_VOR_JUN_cln_attr_ALL_HiLo2022-10-17.csv") %>%
+  select(Year, Season, Pasture, Ecosite, Plot, Transect, Distance, HiLo_vor_kgPerha)
 
-# summarizing to plot
-field.biomass_plot <- field.biomass %>%
-  group_by(Year, Season, Pasture, Plot) %>%
-  summarize(bm_plot = mean(bm))
+field.biomass_oct <- read.csv("CPER VOR/CARM_VOR_OCT_cln_attr_ALL_HiLo2022-10-19.csv") %>%
+  select(Year, Season, Pasture, Ecosite, Plot, Transect, Distance, HiLo_vor_kgPerha)
 
-# summarizing to pasture
-field.biomass_past <- field.biomass_plot %>%
-  group_by(Year, Season, Pasture) %>%
-  summarize(bm_past = mean(bm_plot),
-            bm_se = sd(bm_plot)/sqrt(length(bm_plot))) %>%
+
+field.biomass <- rbind(field.biomass_jun, field.biomass_oct) %>%
+  na.omit(HiLo_vor_kgPerha) # removing distance points with NA
+
+# summarizing to plot then pasture
+field.biomass_past <- field.biomass %>%
+  group_by(Year, Season, Pasture, Ecosite, Plot, Transect) %>%
+  summarize(bm_transect = mean(HiLo_vor_kgPerha)) %>% # biomass of each transect
+  group_by(Year, Season, Pasture, Ecosite, Plot) %>% 
+  summarize(bm_plot = mean(bm_transect)) %>% # biomass of each plot
+  group_by(Year, Season, Pasture) %>% 
+  summarize(bm_past = mean(bm_plot), # biomass of each pasture
+            bm_se = sd(bm_plot)/sqrt(length(bm_plot))) # SE across plots
+
+# adding date of collection
+field.biomass_past <- field.biomass_past %>%
   mutate(month = ifelse(Season == "Spring", 6, 10)) %>% # add date based on season value
   mutate(date = paste(Year, month, 15, sep="-")) %>%
   mutate(date = ymd(date))
@@ -49,11 +59,11 @@ ndvi_cper <- read.csv("cper_ndvi_means_2014_2022.csv") %>%
 # function
 subset_past <- function(data, data.type, past_name) {
   if(data.type == "APEX") {
-    past_bm <- data %>% filter(Pasture == past_name) %>%
-      group_by(Y, ID, date) %>% 
+    past_bm <- data %>% filter(Pasture == past_name & 
+                                 date >= "2014-01-01" &
+                                 month(ymd(date)) %in% c(5:10)) %>%
+      group_by(Y, date, Pasture) %>%
       summarize(vor.bm = sum(vor.bm)) %>%
-      filter(date >= "2014-01-01") %>%
-      filter(month(ymd(date)) %in% c(5:10)) %>%
       mutate(day = yday(date)) %>%
       rename(Year = Y)
     
