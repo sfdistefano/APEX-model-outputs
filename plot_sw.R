@@ -9,18 +9,18 @@ pastID_ecosite <- read.csv("PastureID_ecosite.csv")
 ## APEX output
 apexsad <- read.delim("D:/APEX model/APEX1905_New/APEX1905_New/CONUNN_AGM.sad",
                      sep = "", dec = ".", skip = 8) %>%
-  select(Y,M,D,ID,X0.5CM:X75.85CM) %>%
-  unique()
+  select(Y,M,D,ID,X0.5CM:X75.85CM) %>% # import desired columns
+  unique() # SW values repeat so only need unique values per date
 
 # summarizing for soil water data (volumetric water content)
 apex_sw <- apexsad %>%
   mutate(date = paste(Y, M, D, sep="-")) %>%
-  mutate(date = ymd(date)) %>%
+  mutate(date = ymd(date)) %>% # adding date column in date format
   pivot_longer(cols = X0.5CM:X75.85CM, names_to = "depth.range",
-               values_to = "vwc.daily") %>%
-  mutate(depth.range = gsub("X","", depth.range),
-         vwc.daily = vwc.daily*100) %>%
-  filter(date >= "2018-01-01")
+               values_to = "vwc.daily") %>% # making a longer dataframe that matches CPER data format
+  mutate(depth.range = gsub("X","", depth.range), # removing extra characters
+         vwc.daily = vwc.daily*100) %>% # converting to %
+  filter(date >= "2018-01-01") # date start of CPER data
 
 ## Creating reference dataframe for soil depth
 depth.range <- unique(apex_sw$depth.range)
@@ -40,20 +40,25 @@ cper_sw <- read.csv("19N-15E_soilmoisture_2018-2022.csv") %>%
 ## Plotting volumetric water content
 plot_sw <- function(past_name, depth){
   
+  # filtering for desired pasture and soil depth (cm)
   apex <- apex_sw %>% filter(Pasture == past_name & depth.cm == depth)
-  cper <- cper_sw %>% filter(site == past_name & depth.cm == depth)
+  max.apex <- max(apex$vwc.daily)
+  
+  cper <- cper_sw %>% filter(site == past_name & depth.cm == depth) %>%
+    na.omit(vwc.daily) %>% # removing missing data
+    mutate(vwc.daily_scale = vwc.daily*(max.apex/max(vwc.daily)))
   
   plot <- ggplot() +
     geom_line(data = apex, aes(x = date, y = vwc.daily, color = "APEX")) +
-    geom_line(data = cper, aes(x = date, y = vwc.daily, color = "CPER"))  +
+    geom_line(data = cper, aes(x = date, y = vwc.daily_scale, color = "CPER"))  +
     scale_x_date(date_breaks = "1 year",date_labels = "%Y") +
     ylab("Volumetric Water Content (%)") +
     xlab("Time") +
     labs(color = "Data Source") +
-    ggtitle(paste("Pasture",past_name, ", soil depth =", depth)) +
+    ggtitle(paste("Pasture",past_name, ", soil depth =", depth, "cm")) +
     theme_bw()
   
   return(plot)
 }
 
-plot_sw(past_name = "15E", depth = 50)
+plot_sw(past_name = "15E", depth = 10)
