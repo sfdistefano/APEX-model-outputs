@@ -24,7 +24,7 @@ apex_sw <- apexsad %>%
 
 ## Creating reference dataframe for soil depth
 depth.range <- unique(apex_sw$depth.range)
-depth.cm <- c(2.5, 10, 20, 30,40,50,80)
+depth.cm <- c(2.5, 10, 20, 30,40,50,60,70,80)
 
 depth.ref <- data.frame(depth.range, depth.cm)
 
@@ -37,12 +37,24 @@ cper_sw <- read.csv("19N-15E_soilmoisture_2018-2022.csv") %>%
   mutate(date = mdy(date),
          Y = year(date))
 
+## CPER precipitation
+cper_ppt <- read.csv("CPER PPT/CPER daily climate data.csv") %>%
+  mutate(date = mdy(TimeStamp)) %>%
+  filter(date >= "2018-01-01") %>%
+  na.omit()
+
 ## Plotting volumetric water content
 plot_sw <- function(past_name, depth){
   
   # filtering for desired pasture and soil depth (cm)
-  apex <- apex_sw %>% filter(Pasture == past_name & depth.cm == depth)
+  apex <- apex_sw %>% filter(Pasture == past_name & depth.cm == depth) 
   max.apex <- max(apex$vwc.daily)
+  
+  max.ppt <- max(cper_ppt$RainTotal_mm)
+  
+  coeff <- max.apex/max.ppt
+  
+  ppt <- cper_ppt %>% mutate(ppt_scale = RainTotal_mm*coeff)
   
   cper <- cper_sw %>% filter(site == past_name & depth.cm == depth) %>%
     na.omit(vwc.daily) %>% # removing missing data
@@ -51,13 +63,17 @@ plot_sw <- function(past_name, depth){
   plot <- ggplot() +
     geom_line(data = apex, aes(x = date, y = vwc.daily, color = "APEX")) +
     geom_line(data = cper, aes(x = date, y = vwc.daily_scale, color = "CPER"))  +
-    scale_x_date(date_breaks = "1 year",date_labels = "%Y") +
-    ylab("Volumetric Water Content (%)") +
-    xlab("Time") +
-    labs(color = "Data Source") +
-    ggtitle(paste("Pasture",past_name, ", soil depth =", depth, "cm")) +
-    theme_bw()
-  
+    geom_bar(data = ppt, aes(x = date, y = ppt_scale), 
+             stat = 'identity', color = "blue3") +
+               scale_color_brewer(type = "div", palette = "Dark2") +
+               scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+               scale_y_continuous("Volumetric Water Content (%)",
+                                  sec.axis = sec_axis(~./coeff, name = "Daily Precipitation (mm)")) +
+               xlab("Time") +
+               labs(color = "Data Source") +
+               ggtitle(paste("Pasture",past_name, ", soil depth =", depth, "cm")) +
+               theme_bw()
+             
   return(plot)
 }
 
