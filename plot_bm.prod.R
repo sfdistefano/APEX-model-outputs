@@ -19,14 +19,24 @@ apex_growing.season <- apexsad %>%
 apex_cumsum_CPNM <- apex_growing.season %>% 
   select(date, Y, ID, CPNM, A_DDM) %>%
   group_by(ID, Y, CPNM) %>%
-  mutate(cum_DDM = cumsum(A_DDM)*1000)
+  mutate(cum_DDM = cumsum(A_DDM)*1000) # conversion from metric ton/ha to kg/ha
 
 # cumulative sum of ALL CPNM (i.e., total biomass production)
 apex_cumsum_TOTAL <- apex_growing.season %>% 
   select(date, Y, ID, CPNM, A_DDM) %>%
   group_by(ID, Y) %>%
-  mutate(cum_DDM = cumsum(A_DDM)*1000,
-         date = ymd(date))
+  mutate(cum_DDM = cumsum(A_DDM)*1000)
+
+## STD and STL
+apex_stdl <- apex_growing.season %>% 
+  select(date, Y, ID, CPNM, STLD.INTAKEkg.ha) %>%
+  group_by(date, Y, ID) %>%
+  summarize(STDL = sum(STLD.INTAKEkg.ha))
+
+apex_stdl_CPNM <- apex_growing.season %>% 
+  select(date, Y, ID, CPNM, STLD.INTAKEkg.ha) %>%
+  group_by(date, Y, ID, CPNM) %>%
+  summarize(STDL = sum(STLD.INTAKEkg.ha))
 
 ## reference dataframe for pasture, pastureID, and ecological site
 pastID_ecosite <- read.csv("PastureID_ecosite.csv")
@@ -44,7 +54,7 @@ biomass.plot <- read.csv("CARM_Biomass_cln_attr2021-12-01_wide.csv") %>%
 
 # biomass data is summarized to day*pasture*functional group
 biomass.pasture <-  biomass.plot %>% 
-  mutate(Month = 8, Day = 5,
+  mutate(Month = 8, Day = 12,
          date = ymd(paste(Year, Month, Day, sep = "-"))
   ) %>% # adding date info, when collected in field
   group_by(date, Year, Pasture, Ecosite, Treatment, FGCode) %>%
@@ -73,10 +83,15 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
                     by.x = "ID", by.y = "PastureID") %>% 
       filter(Pasture == past.name & CPNM == func.group)
     
+    stdl <- merge(x = apex_stdl_CPNM, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>% 
+      filter(Pasture == past.name & CPNM == func.group)
+    
     field <- biomass.pasture %>% filter(Pasture == past.name & CPNM2 == func.group)
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Standing Biomass")) +
       geom_point(data = field, aes(x = date, y = Biomass)) +
       geom_errorbar(data = field,
                     aes(x = date, ymin = Biomass - se, ymax = Biomass + se),
@@ -102,6 +117,10 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
                 cum_DDM = mean(cum_DDM)) %>%
       filter(Ecosite == ecosite, CPNM == func.group)
     
+    stdl <- merge(x = apex_stdl_CPNM, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>% 
+      filter(Ecosite == ecosite & CPNM == func.group)
+    
     field <- biomass.pasture %>%
       group_by(date, Y, Ecosite, CPNM2) %>%
       summarize(Biomass_mean = mean(Biomass), se = sd(Biomass)/sqrt(length(Biomass))) %>%
@@ -109,7 +128,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
     
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production"))  +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Standing Biomass")) +
       geom_point(data = field, aes(x = date, y = Biomass_mean)) +
       geom_errorbar(data = field,
                     aes(x = date, ymin = Biomass_mean - se, ymax = Biomass_mean + se),
@@ -119,6 +139,7 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       theme_bw() +
       ylab("Biomass Production (kg/ha)") +
       xlab("Month of the Year (Jun - Oct)") +
+      labs(color = "Biomass") +
       ggtitle(paste("Ecosite", ecosite, "CPNM = ", func.group))
     
     return(plot)
@@ -131,13 +152,18 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
                     by.x = "ID", by.y = "PastureID") %>% 
       filter(Pasture == past.name)
     
+    stdl <- merge(x = apex_stdl, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>% 
+      filter(Pasture == past.name)
+    
     field <- biomass.pasture %>%
       group_by(date, Y, Pasture) %>%
       summarize(Biomass_total = sum(Biomass), se = sd(Biomass)/sqrt(length(Biomass))) %>%
       filter(Pasture == past.name)
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Standing Biomass")) +
       geom_point(data = field, aes(x = date, y = Biomass_total)) +
       geom_errorbar(data = field,
                     aes(x = date, ymin = Biomass_total - se, ymax = Biomass_total + se),
@@ -145,7 +171,7 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       facet_wrap(.~Y, scales = "free_x") +
       scale_x_date(date_breaks = "1 month",date_labels = "%m") +
       theme_bw() +
-      ylab("Biomass Production (kg/ha)") +
+      ylab("Biomass (kg/ha)") +
       xlab("Month of the Year (Jun - Oct)") +
       labs(color = "Biomass") +
       ggtitle(paste("Pasture", past.name, "TOTAL biomass"))
@@ -162,6 +188,10 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
                 cum_DDM = sum(cum_DDM)) %>%
       filter(Ecosite == ecosite)
     
+    stdl <- merge(x = apex_stdl, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>% 
+      filter(Ecosite == ecosite)
+    
     field <- biomass.pasture %>%
       group_by(date, Y, Ecosite, Pasture) %>%
       summarize(Biomass_total = sum(Biomass), 
@@ -173,7 +203,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
     
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM), color = "red") +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Standing Biomass")) +
       geom_point(data = field, aes(x = date, y = Biomass_mean)) +
       geom_errorbar(data = field,
                     aes(x = date, ymin = Biomass_mean - se,
@@ -184,6 +215,7 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       theme_bw() +
       ylab("Biomass Production (kg/ha)") +
       xlab("Month of the Year (Jun - Oct)") +
+      labs(color = "Biomass") +
       ggtitle(paste("Ecosite", ecosite, "TOTAL biomass"))
     
     return(plot)
