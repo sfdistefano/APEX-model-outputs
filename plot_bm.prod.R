@@ -42,15 +42,14 @@ apex_stdl_CPNM <- apex_growing.season %>%
 pastID_ecosite <- read.csv("PastureID_ecosite.csv")
 
 ## original cage biomass used (day*pasture*plot*functional group)
-biomass.plot <- read.csv("CARM_Biomass_cln_attr2021-12-01_wide.csv") %>% 
-  select(-Forage, -HERB) %>%
-  pivot_longer(cols = BOBU:SD, names_to = "FGCode", values_to = "kgPerHa") %>%
-  group_by(Year, Treatment, Pasture, Ecosite, Plot, FGCode) %>%
+biomass.plot <- read.csv("CPER Biomass/CARM_Biomass_cln_attr2023-01-19_DJA_pivots.csv") %>% 
+  group_by(YearSampled, Treatment, Pasture, Ecosite, Plot, FGCode) %>%
   summarize(kgPerHa = mean(kgPerHa))%>% # summarize by plot of each pasture
   filter(!(Plot == 5 & Pasture == "18S")) %>% # prescribed burn plots
   filter(!(Plot == 6 & Pasture == "18S")) %>%
   filter(!(Plot == 5 & Pasture == "19N")) %>%
-  filter(!(Plot == 6 & Pasture == "19N")) 
+  filter(!(Plot == 6 & Pasture == "19N")) %>%
+  rename(Year = YearSampled)
 
 # biomass data is summarized to day*pasture*functional group
 biomass.pasture <-  biomass.plot %>% 
@@ -234,4 +233,4 @@ plot_bm.prod(past.output = "Ecosite", ecosite = "Sandy",
              veg.output = "CPNM", func.group = "BOBU")
 
 plot_bm.prod(past.output = "Ecosite", ecosite = "Sandy",
-             veg.output = "Total",)
+             veg.output = "Total")
