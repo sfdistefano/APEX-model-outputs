@@ -86,7 +86,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
                   by.x = "ID", by.y = "PastureID") %>% 
       filter(Pasture == past.name & CPNM == func.group)
     
-    field <- biomass.pasture %>% filter(Pasture == past.name & CPNM2 == func.group)
+    field <- biomass.pasture %>% 
+      filter(Pasture == past.name & CPNM2 == func.group) # SE across plots
     
     plot <- ggplot() +
       geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production")) +
@@ -110,19 +111,22 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
   if(veg.output == "CPNM" & past.output == "Ecosite") {
     
     cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
-                                      by.x = "ID", by.y = "PastureID") %>%
+                    by.x = "ID", by.y = "PastureID") %>%
       group_by(date, Y, Ecosite, CPNM) %>%
       summarize(A_DDM = mean(A_DDM),
                 cum_DDM = mean(cum_DDM)) %>%
       filter(Ecosite == ecosite, CPNM == func.group)
     
     stdl <- merge(x = apex_stdl_CPNM, y = pastID_ecosite,
-                  by.x = "ID", by.y = "PastureID") %>% 
+                  by.x = "ID", by.y = "PastureID") %>%
+      group_by(date, Y, Ecosite, CPNM) %>%
+      summarize(STDL = mean(STDL)) %>%
       filter(Ecosite == ecosite & CPNM == func.group)
     
     field <- biomass.pasture %>%
       group_by(date, Y, Ecosite, CPNM2) %>%
-      summarize(Biomass_mean = mean(Biomass), se = sd(Biomass)/sqrt(length(Biomass))) %>%
+      summarize(Biomass_mean = mean(Biomass), 
+                se = sd(Biomass)/sqrt(length(Biomass))) %>% # standard error across pastures
       filter(Ecosite == ecosite, CPNM2 == func.group)
     
     
@@ -157,7 +161,8 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
     
     field <- biomass.pasture %>%
       group_by(date, Y, Pasture) %>%
-      summarize(Biomass_total = sum(Biomass), se = sd(Biomass)/sqrt(length(Biomass))) %>%
+      summarize(Biomass_total = sum(Biomass), 
+                se = sd(Biomass)/sqrt(length(Biomass))) %>% # standard error across plots
       filter(Pasture == past.name)
     
     plot <- ggplot() +
@@ -182,13 +187,18 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
     
     cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
                     by.x = "ID", by.y = "PastureID") %>%
-      group_by(date, Y, Ecosite) %>%
+      group_by(date, Y, Ecosite, Pasture) %>%
       summarize(A_DDM = sum(A_DDM),
                 cum_DDM = sum(cum_DDM)) %>%
+      group_by(date, Y, Ecosite) %>%
+      summarize(A_DDM = mean(A_DDM),
+                cum_DDM = mean(cum_DDM)) %>%
       filter(Ecosite == ecosite)
     
     stdl <- merge(x = apex_stdl, y = pastID_ecosite,
-                  by.x = "ID", by.y = "PastureID") %>% 
+                  by.x = "ID", by.y = "PastureID") %>%
+      group_by(date, Y, Ecosite) %>%
+      summarize(STDL = mean(STDL)) %>%
       filter(Ecosite == ecosite)
     
     field <- biomass.pasture %>%
@@ -197,7 +207,7 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
                 se = sd(Biomass)/sqrt(length(Biomass))) %>%
       group_by(date, Y, Ecosite) %>%
       summarize(Biomass_mean = mean(Biomass_total),
-                se = sd(Biomass_total)/sqrt(length(Biomass_total))) %>%
+                se = sd(Biomass_total)/sqrt(length(Biomass_total))) %>% # SE across pastures
       filter(Ecosite == ecosite)
     
     
