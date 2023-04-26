@@ -34,14 +34,18 @@ apex_cumsum_TOTAL <- apex_growing.season %>%
 
 ## STD and STL
 apex_stdl <- apex_growing.season %>% 
-  select(date, Y, ID, CPNM, STLD.INTAKEkg.ha) %>%
+  select(date, Y, ID, CPNM, STD, STL, GZSDkg.ha, GZSLkg.ha) %>%
+  mutate(STD.kgha = STD*1000, STL.kgha = STL*1000) %>%
+  mutate(STLD = STD.kgha + STL.kgha + GZSDkg.ha + GZSLkg.ha) %>%
   group_by(date, Y, ID) %>%
-  summarize(STDL = sum(STLD.INTAKEkg.ha))
+  summarize(STDL = sum(STLD))
 
 apex_stdl_CPNM <- apex_growing.season %>% 
-  select(date, Y, ID, CPNM, STLD.INTAKEkg.ha) %>%
+  select(date, Y, ID, CPNM, STD, STL, GZSDkg.ha, GZSLkg.ha) %>%
+  mutate(STD.kgha = STD*1000, STL.kgha = STL*1000) %>%
+  mutate(STLD = STD.kgha + STL.kgha + GZSDkg.ha + GZSLkg.ha) %>%
   group_by(date, Y, ID, CPNM) %>%
-  summarize(STDL = sum(STLD.INTAKEkg.ha))
+  summarize(STDL = sum(STLD))
 
 ## original cage biomass used (day*pasture*plot*functional group)
 biomass.plot <- read.csv("CPER Biomass/CARM_Biomass_cln_attr2023-01-19_DJA_pivots.csv") %>% 
@@ -536,4 +540,4 @@ plot_bm.prod(veg.output = "Total", ecosite = T,
 plot_bm.prod(veg.output = "Total", treatment = T,
              trt = "TRM")
 plot_bm.prod(veg.output = "Total", es_treatment = T,
-             trt = "TRM", es = "Sandy")
+             trt = "TRM", es = "Loamy")
