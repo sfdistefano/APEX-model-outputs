@@ -89,9 +89,12 @@ biomass.pasture$CPNM2 <- biomass.pasture$CPNM %>%
 
 ## function for plotting biomass
 # NOTE: SE across plots vs pastures aren't much different
-plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group) {
+plot_bm.prod <- function(veg.output,
+                         pasture = F, 
+                         ecosite = F, treatment = F, es_treatment = F,
+                         past.name, func.group, es, trt) {
   
-  if(veg.output == "CPNM" & past.output == "Pasture") {
+  if(veg.output == "CPNM" & pasture == T) {
     
     cumsum <- merge(x = apex_cumsum_CPNM, y = pastID_ecosite, 
                     by.x = "ID", by.y = "PastureID") %>% 
@@ -112,7 +115,7 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       filter(Pasture == past.name & CPNM2 == func.group) %>%
       mutate(Biomass_wt = Biomass*Proportion) %>%
       group_by(Y, date, Pasture, CPNM2) %>%
-      summarize(Biomass = sum(Biomass_wt)) # sum of 1 func.group across ecosites w/in pasture
+      summarize(Biomass_fg = sum(Biomass_wt)) # sum of 1 func.group across ecosites w/in pasture
     
     # SE calculated from plots; some pastures may have 1 plot, SE = 0
     field02 <- biomass.plot_info %>%
@@ -122,18 +125,18 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       summarize(se = sd(Biomass_wt)/sqrt(length(Biomass_wt)))
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production")) +
-      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass")) +
-      geom_point(data = field01, aes(x = date, y = Biomass)) +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_fg)) +
       geom_errorbar(data = field02,
-                    aes(x = date, ymin = field01$Biomass - se, 
-                        ymax = field01$Biomass + se),
+                    aes(x = date, ymin = field01$Biomass_fg - se, 
+                        ymax = field01$Biomass_fg + se),
                     width = 10) +
       facet_wrap(.~Y, scales = "free_x") +
       scale_x_date(date_breaks = "1 month",date_labels = "%m") +
       theme_bw() +
-      ylab("Biomass Production (kg/ha)") +
-      xlab("Month of the Year (Jun - Oct)") +
+      ylab("Biomass (kg/ha)") +
+      xlab("Month of the Year (May - Oct)") +
       labs(color = "Biomass") +
       ggtitle(paste("Pasture", past.name, "CPNM = ", func.group))
     
@@ -141,48 +144,156 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
     
   }
   
-  if(veg.output == "CPNM" & past.output == "Ecosite") {
+  if(veg.output == "CPNM" & ecosite == T) {
     
     cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
                     by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es, CPNM == func.group) %>%
       group_by(date, Y, Ecosite, CPNM) %>%
       summarize(A_DDM = mean(A_DDM),
-                cum_DDM = mean(cum_DDM)) %>%
-      filter(Ecosite == ecosite, CPNM == func.group)
+                cum_DDM = mean(cum_DDM))
+    
     
     stdl <- merge(x = apex_stdl_CPNM, y = pastID_ecosite,
                   by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es & CPNM == func.group) %>%
       group_by(date, Y, Ecosite, CPNM) %>%
-      summarize(STDL = mean(STDL)) %>%
-      filter(Ecosite == ecosite & CPNM == func.group)
+      summarize(STDL = mean(STDL))
     
-    field <- biomass.pasture %>%
+    # mean calculated across pastures w/in ecosite
+    field01 <- biomass.pasture %>% 
+      filter(Ecosite == es & CPNM2 == func.group) %>%
       group_by(date, Y, Ecosite, CPNM2) %>%
-      summarize(Biomass_mean = mean(Biomass), # mean across pastures
-                se = sd(Biomass)/sqrt(length(Biomass))) %>% # standard error across pastures
-      filter(Ecosite == ecosite, CPNM2 == func.group)
+      summarize(Biomass_fg = mean(Biomass))
     
+    # SE calculated from plots
+    field02 <- biomass.plot_info %>%
+      filter(Ecosite == es & CPNM2 == func.group) %>%
+      group_by(date, Y, Ecosite, Plot, CPNM2) %>%
+      summarize(Biomass_fg = mean(kgPerHa)) %>%
+      group_by(date, Y, Ecosite, CPNM2) %>%
+      summarize(se = sd(Biomass_fg, na.rm = T)/sqrt(length(Biomass_fg))) # SE across plots w/in ecosite
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production"))  +
-      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass")) +
-      geom_point(data = field, aes(x = date, y = Biomass_mean)) +
-      geom_errorbar(data = field,
-                    aes(x = date, ymin = Biomass_mean - se, ymax = Biomass_mean + se),
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)"))  +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_fg)) +
+      geom_errorbar(data = field02,
+                    aes(x = date, ymin = field01$Biomass_fg - se, 
+                        ymax = field01$Biomass_fg + se),
                     width = 10) +
       facet_wrap(.~Y, scales = "free_x") +
       scale_x_date(date_breaks = "1 month",date_labels = "%m") +
       theme_bw() +
-      ylab("Biomass Production (kg/ha)") +
-      xlab("Month of the Year (Jun - Oct)") +
+      ylab("Biomass (kg/ha)") +
+      xlab("Month of the Year (May - Oct)") +
       labs(color = "Biomass") +
-      ggtitle(paste("Ecosite", ecosite, "CPNM = ", func.group))
+      ggtitle(paste("Ecosite", es, "CPNM = ", func.group))
     
     return(plot)
     
   }
   
-  if(veg.output == "Total" & past.output == "Pasture"){
+  if(veg.output == "CPNM" & treatment == T) {
+    
+    cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
+                    by.x = "ID", by.y = "PastureID") %>%
+      filter(graze.trt == trt, CPNM == func.group) %>%
+      group_by(date, Y, graze.trt, CPNM) %>%
+      summarize(A_DDM = mean(A_DDM),
+                cum_DDM = mean(cum_DDM))
+    
+    stdl <- merge(x = apex_stdl_CPNM, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>%
+      filter(graze.trt == trt & CPNM == func.group) %>%
+      group_by(date, Y, graze.trt, CPNM) %>%
+      summarize(STDL = mean(STDL)) %>%
+      filter(graze.trt == trt & CPNM == func.group)
+    
+    # mean calculated across pastures w/in grazing treatment
+    field01 <- biomass.pasture %>% 
+      filter(graze.trt == trt & CPNM2 == func.group) %>%
+      group_by(date, Y, graze.trt, CPNM2) %>%
+      summarize(Biomass_fg = mean(Biomass)) # mean of each func.group w/in treatment
+    
+    # SE calculated from plots
+    field02 <- biomass.plot_info %>%
+      filter(graze.trt == trt & CPNM2 == func.group) %>%
+      group_by(date, Y, graze.trt, Plot, CPNM2) %>%
+      summarize(Biomass_fg = mean(kgPerHa)) %>%
+      group_by(date, Y, graze.trt, CPNM2) %>%
+      summarize(se = sd(Biomass_fg, na.rm = T)/sqrt(length(Biomass_fg))) # SE across plots w/in treatment
+    
+    plot <- ggplot() +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)"))  +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_fg)) +
+      geom_errorbar(data = field02,
+                    aes(x = date, ymin = field01$Biomass_fg - se, 
+                        ymax = field01$Biomass_fg + se),
+                    width = 10) +
+      facet_wrap(.~Y, scales = "free_x") +
+      scale_x_date(date_breaks = "1 month",date_labels = "%m") +
+      theme_bw() +
+      ylab("Biomass (kg/ha)") +
+      xlab("Month of the Year (May - Oct)") +
+      labs(color = "Biomass") +
+      ggtitle(paste("Grazing", trt, "CPNM = ", func.group))
+    
+    return(plot)
+    
+  }
+  
+  if(veg.output == "CPNM" & es_treatment == T) {
+    
+    cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
+                    by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es, graze.trt == trt, CPNM == func.group) %>%
+      group_by(date, Y, Ecosite, graze.trt, CPNM) %>%
+      summarize(A_DDM = mean(A_DDM),
+                cum_DDM = mean(cum_DDM))
+    
+    stdl <- merge(x = apex_stdl_CPNM, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es, graze.trt == trt, CPNM == func.group) %>%
+      group_by(date, Y, Ecosite, graze.trt, CPNM) %>%
+      summarize(STDL = mean(STDL))
+    
+    # mean calculated across pastures w/in ecosite*grazing treatment
+    field01 <- biomass.pasture %>% 
+      filter(Ecosite == es & graze.trt == trt & CPNM2 == func.group) %>%
+      group_by(date, Y, Ecosite, graze.trt, CPNM2) %>%
+      summarize(Biomass_fg = mean(Biomass)) # mean of each func.group w/in treatment
+    
+    # SE calculated from plots
+    field02 <- biomass.plot_info %>%
+      filter(Ecosite == es & graze.trt == trt & CPNM2 == func.group) %>%
+      group_by(date, Y, Ecosite, graze.trt, Plot, CPNM2) %>%
+      summarize(Biomass_fg = mean(kgPerHa)) %>%
+      group_by(date, Y, Ecosite, graze.trt, CPNM2) %>%
+      summarize(se = sd(Biomass_fg, na.rm = T)/sqrt(length(Biomass_fg))) # SE across plots w/in ecosite*treatment
+    
+    plot <- ggplot() +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)"))  +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_fg)) +
+      geom_errorbar(data = field02,
+                    aes(x = date, ymin = field01$Biomass_fg - se, 
+                        ymax = field01$Biomass_fg + se),
+                    width = 10) +
+      facet_wrap(.~Y, scales = "free_x") +
+      scale_x_date(date_breaks = "1 month",date_labels = "%m") +
+      theme_bw() +
+      ylab("Biomass (kg/ha)") +
+      xlab("Month of the Year (May - Oct)") +
+      labs(color = "Biomass") +
+      ggtitle(paste("Ecosite", es,"- Grazing", trt, "CPNM = ", func.group))
+    
+    return(plot)
+    
+  }
+  
+  if(veg.output == "Total" & pasture == T){
     
     cumsum <- merge(x = apex_cumsum_TOTAL, y = pastID_ecosite, 
                     by.x = "ID", by.y = "PastureID") %>% 
@@ -198,99 +309,231 @@ plot_bm.prod <- function(past.output, past.name, ecosite, veg.output, func.group
       group_by(date, Y, Pasture) %>%
       summarize(STDL = sum(stdl_wt))
     
-    # mean calculated at pasture level
-    field01 <- biomass.pasture %>%
+    # mean calculated across pastures 
+    field01 <- biomass.pasture %>% 
       filter(Pasture == past.name) %>%
-      mutate(Biomass_wt = Biomass*Proportion) %>%
+      group_by(date, Y, Pasture, CPNM2) %>%
+      summarize(Biomass_fg = mean(Biomass)) %>%  # mean of each func.group w/in treatment
       group_by(date, Y, Pasture) %>%
-      summarize(Biomass_total = sum(Biomass_wt)) # sum per pasture
+      summarize(Biomass_tot = sum(Biomass_fg, na.rm = T)) # sum of all func.group
     
-    # SE calculated from plots; some pastures may have 1 plot, SE = 0            
+    # SE calculated from plots
     field02 <- biomass.plot_info %>%
       filter(Pasture == past.name) %>%
-      mutate(Biomass_wt = kgPerHa*Proportion) %>%
-      group_by(date, Y, Pasture, Ecosite, Plot) %>%
-      summarize(Biomass_wt = sum(Biomass_wt)) %>% # total biomass for each plot
+      group_by(date, Y, Pasture, Plot, CPNM2) %>%
+      summarize(Biomass_fg = mean(kgPerHa)) %>%
+      group_by(date, Y, Pasture, Plot) %>%
+      summarize(Biomass_tot = sum(Biomass_fg)) %>%
       group_by(date, Y, Pasture) %>%
-      summarize(se = sd(Biomass_wt)/sqrt(length(Biomass_wt))) # SE across all plots of a pasture
+      summarize(se = sd(Biomass_tot, na.rm = T)/sqrt(length(Biomass_tot))) # SE across plots w/in pasture
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production")) +
-      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass")) +
-      geom_point(data = field01, aes(x = date, y = Biomass_total)) +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_tot)) +
       geom_errorbar(data = field02,
-                    aes(x = date, ymin = field01$Biomass_total - se, 
-                        ymax = field01$Biomass_total + se),
+                    aes(x = date, ymin = field01$Biomass_tot - se, 
+                        ymax = field01$Biomass_tot + se),
                     width = 10) +
       facet_wrap(.~Y, scales = "free_x") +
       scale_x_date(date_breaks = "1 month",date_labels = "%m") +
       theme_bw() +
       ylab("Biomass (kg/ha)") +
-      xlab("Month of the Year (Jun - Oct)") +
+      xlab("Month of the Year (May - Oct)") +
       labs(color = "Biomass") +
       ggtitle(paste("Pasture", past.name, "TOTAL biomass"))
     
     return(plot)
   }
   
-  if(veg.output == "Total" & past.output == "Ecosite") {
+  if(veg.output == "Total" & ecosite == T) {
     
     cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
                     by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es) %>%
       group_by(date, Y, Ecosite, Pasture) %>%
       summarize(A_DDM = sum(A_DDM),
                 cum_DDM = sum(cum_DDM)) %>%
       group_by(date, Y, Ecosite) %>%
       summarize(A_DDM = mean(A_DDM),
-                cum_DDM = mean(cum_DDM)) %>%
-      filter(Ecosite == ecosite)
+                cum_DDM = mean(cum_DDM))
     
     stdl <- merge(x = apex_stdl, y = pastID_ecosite,
                   by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es) %>%
       group_by(date, Y, Ecosite) %>%
-      summarize(STDL = mean(STDL)) %>%
-      filter(Ecosite == ecosite)
+      summarize(STDL = mean(STDL))
     
-    field <- biomass.pasture %>%
-      group_by(date, Y, Ecosite, Pasture) %>%
-      summarize(Biomass_total = sum(Biomass), 
-                se = sd(Biomass)/sqrt(length(Biomass))) %>%
+    # mean calculated across pastures w/in grazing treatment
+    field01 <- biomass.pasture %>% 
+      filter(Ecosite == es) %>%
+      group_by(date, Y, Ecosite, CPNM2) %>%
+      summarize(Biomass_fg = mean(Biomass)) %>%  # mean of each func.group w/in treatment
       group_by(date, Y, Ecosite) %>%
-      summarize(Biomass_mean = mean(Biomass_total), # mean across pastures
-                se = sd(Biomass_total)/sqrt(length(Biomass_total))) %>% # SE across pastures
-      filter(Ecosite == ecosite)
+      summarize(Biomass_tot = sum(Biomass_fg, na.rm = T)) # sum of all func.group
     
+    # SE calculated from plots
+    field02 <- biomass.plot_info %>%
+      filter(Ecosite == es) %>%
+      group_by(date, Y, Ecosite, Plot, CPNM2) %>%
+      summarize(Biomass_fg = mean(kgPerHa)) %>%
+      group_by(date, Y, Ecosite, Plot) %>%
+      summarize(Biomass_tot = sum(Biomass_fg)) %>%
+      group_by(date, Y, Ecosite) %>%
+      summarize(se = sd(Biomass_tot, na.rm = T)/sqrt(length(Biomass_tot))) # SE across plots w/in treatment
     
     plot <- ggplot() +
-      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production")) +
-      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass")) +
-      geom_point(data = field, aes(x = date, y = Biomass_mean)) +
-      geom_errorbar(data = field,
-                    aes(x = date, ymin = Biomass_mean - se,
-                        ymax = Biomass_mean + se),
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_tot)) +
+      geom_errorbar(data = field02,
+                    aes(x = date, ymin = field01$Biomass_tot - se,
+                        ymax = field01$Biomass_tot + se),
                     width = 10) +
       facet_wrap(.~Y, scales = "free_x") +
       scale_x_date(date_breaks = "1 month",date_labels = "%m") +
       theme_bw() +
-      ylab("Biomass Production (kg/ha)") +
-      xlab("Month of the Year (Jun - Oct)") +
+      ylab("Biomass (kg/ha)") +
+      xlab("Month of the Year (May - Oct)") +
       labs(color = "Biomass") +
-      ggtitle(paste("Ecosite", ecosite, "TOTAL biomass"))
+      ggtitle(paste("Ecosite", es, "TOTAL biomass"))
+    
+    return(plot)
+    
+  }
+  
+  if(veg.output == "Total" & treatment == T) {
+    
+    cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
+                    by.x = "ID", by.y = "PastureID") %>%
+      filter(graze.trt == trt) %>%
+      group_by(date, Y, graze.trt, Pasture) %>%
+      summarize(A_DDM = sum(A_DDM),
+                cum_DDM = sum(cum_DDM)) %>%
+      group_by(date, Y, graze.trt) %>%
+      summarize(A_DDM = mean(A_DDM),
+                cum_DDM = mean(cum_DDM))
+    
+    stdl <- merge(x = apex_stdl, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>%
+      filter(graze.trt == trt) %>%
+      group_by(date, Y, graze.trt) %>%
+      summarize(STDL = mean(STDL))
+    
+    # mean calculated across pastures w/in grazing treatment
+    field01 <- biomass.pasture %>% 
+      filter(graze.trt == trt) %>%
+      group_by(date, Y, graze.trt, CPNM2) %>%
+      summarize(Biomass_fg = mean(Biomass)) %>%  # mean of each func.group w/in treatment
+      group_by(date, Y, graze.trt) %>%
+      summarize(Biomass_tot = sum(Biomass_fg, na.rm = T)) # sum of all func.group
+    
+    # SE calculated from plots
+    field02 <- biomass.plot_info %>%
+      filter(graze.trt == trt) %>%
+      group_by(date, Y, graze.trt, Plot, CPNM2) %>%
+      summarize(kgPerHa = mean(kgPerHa)) %>%
+      group_by(date, Y, graze.trt, Plot) %>%
+      summarize(Biomass_tot = sum(kgPerHa)) %>%
+      group_by(date, Y, graze.trt) %>%
+      summarize(se = sd(Biomass_tot, na.rm = T)/sqrt(length(Biomass_tot))) # SE across plots w/in treatment
+    
+    plot <- ggplot() +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_tot)) +
+      geom_errorbar(data = field02,
+                    aes(x = date, ymin = field01$Biomass_tot - se,
+                        ymax = field01$Biomass_tot + se),
+                    width = 10) +
+      facet_wrap(.~Y, scales = "free_x") +
+      scale_x_date(date_breaks = "1 month",date_labels = "%m") +
+      theme_bw() +
+      ylab("Biomass (kg/ha)") +
+      xlab("Month of the Year (May - Oct)") +
+      labs(color = "Biomass") +
+      ggtitle(paste("Grazing", trt, "TOTAL biomass"))
+    
+    return(plot)
+    
+  }
+  
+  if(veg.output == "Total" & es_treatment == T) {
+    
+    cumsum <- merge(apex_cumsum_CPNM, pastID_ecosite,
+                    by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es & graze.trt == trt) %>%
+      group_by(date, Y, Ecosite, graze.trt, Pasture) %>%
+      summarize(A_DDM = sum(A_DDM), # summing all func.group of each pasture
+                cum_DDM = sum(cum_DDM)) %>%
+      group_by(date, Y, Ecosite, graze.trt) %>%
+      summarize(A_DDM = mean(A_DDM),
+                cum_DDM = mean(cum_DDM))
+    
+    
+    stdl <- merge(x = apex_stdl, y = pastID_ecosite,
+                  by.x = "ID", by.y = "PastureID") %>%
+      filter(Ecosite == es & graze.trt == trt) %>%
+      group_by(date, Y, Ecosite, graze.trt == trt) %>%
+      summarize(STDL = mean(STDL))
+    
+    # mean calculated first at pasture level then grazing trt*ecosite
+    field01 <- biomass.pasture %>% 
+      filter(Ecosite == es & graze.trt == trt) %>%
+      mutate(Biomass_wt = Biomass*Proportion) %>%
+      group_by(date, Y, Ecosite, graze.trt, CPNM2) %>%
+      summarize(Biomass_fg = mean(Biomass_wt)) %>%
+      group_by(date, Y, Ecosite, graze.trt) %>%
+      summarize(Biomass_tot = sum(Biomass_fg))
+    
+    # SE calculated from plots
+    field02 <- biomass.plot_info %>%
+      filter(Ecosite == es & graze.trt == trt) %>%
+      mutate(Biomass_wt = kgPerHa*Proportion) %>%
+      group_by(date, Y, Ecosite, graze.trt, Plot, CPNM2) %>%
+      summarize(Biomass_fg = mean(kgPerHa)) %>%
+      group_by(date, Y, Ecosite, graze.trt, Plot) %>%
+      summarize(Biomass_tot = sum(Biomass_fg)) %>%
+      group_by(date, Y, Ecosite, graze.trt) %>%
+      summarize(se = sd(Biomass_tot)/sqrt(length(Biomass_tot)))
+    
+    plot <- ggplot() +
+      geom_line(data = cumsum, aes(x = date, y = cum_DDM, color = "Biomass Production (above&below)")) +
+      geom_line(data = stdl, aes(x = date, y = STDL, color = "Ungrazed Biomass (above)")) +
+      geom_point(data = field01, aes(x = date, y = Biomass_tot)) +
+      geom_errorbar(data = field02,
+                    aes(x = date, ymin = field01$Biomass_tot - se,
+                        ymax = field01$Biomass_tot + se),
+                    width = 10) +
+      facet_wrap(.~Y, scales = "free_x") +
+      scale_x_date(date_breaks = "1 month",date_labels = "%m") +
+      theme_bw() +
+      ylab("Biomass (kg/ha)") +
+      xlab("Month of the Year (May - Oct)") +
+      labs(color = "Biomass") +
+      ggtitle(paste("Ecosite", es,"- Grazing", trt, "TOTAL biomass"))
     
     return(plot)
     
   }
 }
 
-plot_bm.prod(past.output = "Pasture", past.name = "15E", 
-             veg.output = "CPNM", func.group = "BOBU")
 
-plot_bm.prod(past.output = "Pasture", past.name = "7NW", 
-             veg.output = "Total")
+plot_bm.prod(veg.output = "CPNM", pasture = T,
+             func.group = "BOBU", past.name = "7NW")
+plot_bm.prod(veg.output = "CPNM", treatment = T,
+             func.group = "BOBU", trt = "TRM")
+plot_bm.prod(veg.output = "CPNM", ecosite = T,
+             func.group = "BOBU", es = "Sandy")
+plot_bm.prod(veg.output = "CPNM", es_treatment = T,
+             func.group = "BOBU", trt = "TRM", es = "Sandy")
 
 
-plot_bm.prod(past.output = "Ecosite", ecosite = "Sandy", 
-             veg.output = "CPNM", func.group = "BOBU")
-
-plot_bm.prod(past.output = "Ecosite", ecosite = "Loamy",
-             veg.output = "Total")
+plot_bm.prod(veg.output = "Total", pasture = T, 
+             past.name = "15E")
+plot_bm.prod(veg.output = "Total", ecosite = T, 
+             es = "Sandy")
+plot_bm.prod(veg.output = "Total", treatment = T,
+             trt = "TRM")
+plot_bm.prod(veg.output = "Total", es_treatment = T,
+             trt = "TRM", es = "Sandy")
