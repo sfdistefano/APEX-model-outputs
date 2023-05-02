@@ -7,9 +7,9 @@ setwd("D:/APEX data and scripts/Data/")
 pastID_ecosite <- read.csv("PastureID_ecosite.csv")
 
 ## APEX output
-apexsad <- read.delim("D:/APEX model/APEX1905_New/APEX1905_New/CONUNN_AGM.sad",
+apexsad <- read.delim("D:/APEX model/SAD files/CONUNN_AGM_19N_haverson/CONUNN_AGM.sad",
                      sep = "", dec = ".", skip = 8) %>%
-  select(Y,M,D,ID,X0.5CM:X75.85CM) %>% # import desired columns
+  select(Y,M,D,ID,PRCP,X0.5CM:X75.85CM) %>% # import desired columns
   unique() # SW values repeat so only need unique values per date
 
 # summarizing for soil water data (volumetric water content)
@@ -43,6 +43,10 @@ cper_ppt <- read.csv("CPER PPT/CPER daily climate data.csv") %>%
   filter(date >= "2018-01-01") %>%
   na.omit()
 
+cper_ppt_month <- cper_ppt %>% group_by(MONTH, YEAR) %>% 
+  summarize(mon.precip = sum(RainTotal_mm)) %>%
+  mutate(date = ym(paste(YEAR,MONTH)))
+
 ## Plotting volumetric water content
 plot_sw <- function(past_name, depth){
   
@@ -61,20 +65,24 @@ plot_sw <- function(past_name, depth){
     mutate(vwc.daily_scale = vwc.daily*(max.apex/max(vwc.daily)))
   
   plot <- ggplot() +
+    geom_bar(data = ppt, aes(x = date, y = ppt_scale, 
+                             fill = "Daily Precip"), alpha = 0.75, 
+             stat = 'identity') +
     geom_line(data = apex, aes(x = date, y = vwc.daily, color = "APEX")) +
     geom_line(data = cper, aes(x = date, y = vwc.daily_scale, color = "CPER"))  +
-    geom_bar(data = ppt, aes(x = date, y = ppt_scale), 
-             stat = 'identity', color = "blue3") +
-               scale_color_brewer(type = "div", palette = "Dark2") +
-               scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
-               scale_y_continuous("Volumetric Water Content (%)",
-                                  sec.axis = sec_axis(~./coeff, name = "Daily Precipitation (mm)")) +
-               xlab("Time") +
-               labs(color = "Data Source") +
-               ggtitle(paste("Pasture",past_name, ", soil depth =", depth, "cm")) +
-               theme_bw()
-             
+    scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+    xlab("Time") +
+    scale_y_continuous("Volumetric Water Content (%)", 
+                       # limits = c(0,30),
+                       sec.axis = sec_axis(~./coeff, name = "Daily Precipitation (mm)")) +
+    scale_color_brewer(type = "div", palette = "Dark2") +
+    scale_fill_manual(values = "#0072B2") + # added for fill color
+    labs(color = "Data Source", fill = "Data Type") + # added for fill color
+    ggtitle(paste("Pasture",past_name, ", soil depth =", depth, "cm")) +
+    theme_bw()
+  
+  
   return(plot)
 }
 
-plot_sw(past_name = "15E", depth = 10)
+plot_sw(past_name = "19N", depth = 30)
