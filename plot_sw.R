@@ -7,7 +7,7 @@ setwd("D:/APEX data and scripts/Data/")
 pastID_ecosite <- read.csv("PastureID_ecosite.csv")
 
 ## APEX output
-apexsad <- read.delim("D:/APEX model/SAD files/CONUNN_AGM_19N_haverson/CONUNN_AGM.sad",
+apexsad <- read.delim("D:/APEX model/APEX1905_New - Copy/APEX1905_New/CONUNN_AGM.sad",
                      sep = "", dec = ".", skip = 8) %>%
   select(Y,M,D,ID,PRCP,X0.5CM:X75.85CM) %>% # import desired columns
   unique() # SW values repeat so only need unique values per date
@@ -85,4 +85,4 @@ plot_sw <- function(past_name, depth){
   return(plot)
 }
 
-plot_sw(past_name = "19N", depth = 30)
+plot_sw(past_name = "19N", depth = 10)
