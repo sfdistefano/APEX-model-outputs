@@ -1,0 +1,35 @@
+PastureID,Pasture,Ecosite,graze.trt,Block,Proportion
+1,15E,Loamy,TRM,1,1
+2,24W,Loamy,TRM,2,1
+3,26E,Loamy,TRM,3,1
+4,25SE,Loamy,TRM,4,1
+5,31E,Sandy,TRM,5,0.25
+6,19N,Sandy,TRM,6,1
+7,7NW,Sandy,TRM,7,0.17
+8,5E,Sandy,TRM,8,0.5
+9,17N,Sandy,TRM,9,0.33
+10,20SE,Sandy,TRM,10,0.67
+11,10S,Loamy,CARM,1,1
+12,21N,Loamy,CARM,2,1
+13,26W,Loamy,CARM,3,1
+14,25NW,Loamy,CARM,4,1
+15,31W,Sandy,CARM,5,0.25
+16,18S,Sandy,CARM,6,1
+17,7SE,Sandy,CARM,7,0.17
+18,8E,Sandy,CARM,8,0.5
+19,17S,Sandy,CARM,9,0.33
+20,20NW,Sandy,CARM,10,0.67
+21,20SE,Salt Flats,TRM,10,0.33
+22,20NW,Salt Flats,CARM,10,0.33
+23,17N,Loamy,TRM,9,0.33
+24,17N,Salt Flats,TRM,9,0.33
+25,17S,Loamy,CARM,9,0.33
+26,17S,Salt Flats,CARM,9,0.33
+27,7NW,Loamy,TRM,7,0.5
+28,7NW,Salt Flats,TRM,7,0.33
+29,7SE,Loamy,CARM,7,0.5
+30,7SE,Salt Flats,CARM,7,0.33
+31,5E,Loamy,TRM,8,0.5
+32,8E,Loamy,CARM,8,0.5
+33,31W,Loamy,CARM,5,0.75
+34,31E,Loamy,TRM,5,0.75

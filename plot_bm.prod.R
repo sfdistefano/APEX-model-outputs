@@ -5,10 +5,10 @@ library(zoo)
 setwd("D:/APEX data and scripts/Data/")
 
 ## reference dataframe for pasture, pastureID, and ecological site
-pastID_ecosite <- read.csv("PastureID_ecosite.csv")
+pastID_ecosite <- read.csv("PastureID_ecosite_92subareas.csv")
 
 ## APEX output
-apexsad <- read.delim("D:/APEX model/APEX1905_New/APEX1905_New/CONUNN_AGM.sad",
+apexsad <- read.delim("D:/APEX model/APEX1905_New/APEX1905_div plot_precip past_OPC diff - COPY/CONUNN_AGM.sad",
                      sep = "", dec = ".", skip = 8) %>%
   mutate(date = paste(Y,M,D, sep = "-")) %>%
   mutate(date = ymd(date))
@@ -524,7 +524,8 @@ plot_bm.prod <- function(veg.output,
 
 
 plot_bm.prod(veg.output = "CPNM", pasture = T,
-             func.group = "BOBU", past.name = "7NW")
+             func.group = "VUOC", past.name = "15E")
+
 plot_bm.prod(veg.output = "CPNM", treatment = T,
              func.group = "BOBU", trt = "TRM")
 plot_bm.prod(veg.output = "CPNM", ecosite = T,
