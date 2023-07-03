@@ -139,6 +139,7 @@ ndvi_trt <- ndvi_cper %>%
 ##### PLOTTING DATA ############################################################
 
 ### Pasture, TOTAL biomass
+# this code only works for pastures w/ one ecological site
 plot_bm.vor_ecosite <- function(past_name) {
   
   # model output for a single pasture
@@ -173,9 +174,11 @@ plot_bm.vor_ecosite <- function(past_name) {
     scale_x_date(date_breaks = "1 month",date_labels = "%m") +
     theme_bw() +
     scale_y_continuous("VOR biomass (kg per ha)",
-                       sec.axis = sec_axis(~./coeff, name = "NDVI"))
+                       sec.axis = sec_axis(~./coeff, name = "NDVI")) +
+    ggtitle(paste("Pasture", past_name, ",", 
+                  past_ecosite, "Ecosite, CARM name:", carm_name, sep = " "))
   
   return(plot)
 }
 
-plot_bm.vor_ecosite(past_name = "10S")
+plot_bm.vor_ecosite(past_name = "7NW")
