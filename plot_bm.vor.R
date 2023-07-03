@@ -3,34 +3,54 @@ library(lubridate)
 
 setwd("D:/APEX data and scripts/Data")
 
-## Reference dataframe for pasture, pastureID, and ecological site
+##### APEX DATA ################################################################
+
+## Data pathways
+# Continuously grazed pastures (TRM)
+# TRM <- "D:/APEX model/APEX1905_New/APEX1905_div plot_precip past_OPC diff - TRM/CONUNN_AGM.sad"
+
+# Rotationally grazed pastures (CARM)
+# CARM <- "D:/APEX model/APEX1905_New/APEX1905_div plot_precip past_OPC diff - CARM/CONUNN_AGM.sad"
+
+# All 92 plots
+all92 <- "D:/APEX model/APEX1905_New/APEX1905_div plot_precip past_OPC diff - all 92/CONUNN_AGM.sad"
+
+## Import data
+# TRM
+# apexsad_TRM <- read.delim(TRM, sep = "", dec = ".", skip = 8) %>%
+#   select(ID, Y, M, D, CPNM, STL, STD, PRCP)
+
+# CARM
+# apexsad_CARM <- read.delim(CARM, sep = "", dec = ".", skip = 8) %>%
+#   select(ID, Y, M, D, CPNM, STL, STD, PRCP)
+
+# ALL 92
+apexsad <- read.delim(all92, sep = "", dec = ".", skip = 8) %>%
+    select(ID, Y, M, D, CPNM, STL, STD, PRCP) %>%
+  mutate(date = ymd(paste(Y, M, D, sep="-")),
+         Year = year(date)) %>% # add date column
+  filter(date >= "2014-01-01" & # filter for start of experiment
+           month(ymd(date)) %in% c(5:10)) # filter for growing season
+
+# Reference dataframe for pasture, pastureID, and ecological site
 pastID_ecosite <- read.csv("PastureID_ecosite_92subareas.csv")
 
-#### APEX output ###############################################################
-apexsad <- read.delim("D:/APEX model/APEX1905_New/APEX1905_div plot_precip past_OPC diff - COPY/CONUNN_AGM.sad",
-                      sep = "", dec = ".", skip = 8) %>%
-  select(ID, Y, M, D, CPNM, STL, STD, PRCP)
+## Data preparation
+# apexsad <- rbind(apexsad_TRM, apexsad_CARM) %>%
+#   mutate(date = ymd(paste(Y, M, D, sep="-")),
+#          Year = year(date)) %>% # add date column
+#   filter(date >= "2014-01-01" & # filter for start of experiment
+#            month(ymd(date)) %in% c(5:10)) # filter for growing season
 
-## calculating equivalent of VOR biomass data
-apex.bm_vor <- apexsad %>%
-  mutate(date = paste(Y, M, D, sep="-")) %>% # adding date column
-  mutate(date = ymd(date)) %>% # transforming into date format
-  rename(Year = Y) %>%
-  filter(date >= "2014-01-01" & # filter for start of CARM
-           month(ymd(date)) %in% c(5:10)) %>% # filter for growing season
+apex.bm_vor <- apexsad %>% 
   merge(pastID_ecosite, by.x = "ID", by.y = "PastureID") %>%
   mutate(vor.bm = (STL + STD)*1000,
          vor.bm_wt = vor.bm*Proportion)
 
 # VOR biomass at pasture level
 apex.bm_vor_pasture <- apex.bm_vor %>%
-  group_by(Year, date, Pasture, graze.trt) %>%
-  summarize(vor.bm_past = sum(vor.bm_wt)) %>% # total standing biomass of a pasture
-  mutate(day = yday(date))
-# VOR biomass within grazing treatment
-apex.bm_vor_trt <- apex.bm_vor_pasture %>%
-  group_by(Year, date, graze.trt) %>%
-  summarize(vor.bm_trt = mean(vor.bm_past))
+  group_by(Year, date, Pasture, Ecosite, graze.trt, CARM_name) %>%
+  summarize(vor.bm_past = sum(vor.bm_wt))
 
 #### RS biomass data, derived by Sean Kearney ####
 rs.biomass <- read.csv("cper_biomass_means_2014_2022.csv") %>%
@@ -44,6 +64,15 @@ rs.biomass <- read.csv("cper_biomass_means_2014_2022.csv") %>%
 rs.biomass_trt <- rs.biomass %>%
   merge(pastID_ecosite, by = "Pasture") %>%
   group_by(Year, date, graze.trt) %>%
+  summarize(Biomass_kg_ha = mean(Biomass_kg_ha))
+
+# RS biomass by ecological site
+pastID_ecosite_sub <- pastID_ecosite %>% 
+  select(PastureID, Pasture, Ecosite, CARM_name) 
+
+rs.biomass_ecosite <- rs.biomass %>%
+  merge(pastID_ecosite_sub, by = "Pasture") %>%
+  group_by(Year, date, Ecosite) %>%
   summarize(Biomass_kg_ha = mean(Biomass_kg_ha))
 
 #### Field biomass data ########################################################
@@ -79,6 +108,20 @@ field.biomass_trt <- field.biomass_past %>%
   summarize(bm_trt = mean(bm_past), 
             bm_se = sd(bm_past)/sqrt(length(bm_past)))
 
+# summarizing by ecological site
+field.biomass_ecosite <- field.biomass %>%
+  group_by(Year, Season, Pasture, Ecosite, Plot, Transect) %>%
+  summarize(bm_transect = mean(HiLo_vor_kgPerha)) %>% # biomass of each transect
+  group_by(Year, Season, Pasture, Ecosite, Plot) %>% 
+  summarize(bm_plot = mean(bm_transect)) %>%
+  group_by(Year, Season, Ecosite) %>% 
+  summarize(bm_ecosite = mean(bm_plot), 
+            bm_se = sd(bm_plot)/sqrt(length(bm_plot))) %>%
+  mutate(month = ifelse(Season == "Spring", 6, 10)) %>% # add date based on season value
+  mutate(date = paste(Year, month, 15, sep="-")) %>%
+  mutate(date = ymd(date)) %>% # transforming to date format
+  filter(date >= "2014-01-01")
+
 #### NDVI ######################################################################
 ndvi_cper <- read.csv("cper_ndvi_means_2014_2022.csv") %>%
   mutate(date = gsub(" 0:00", "", date)) %>%
@@ -93,73 +136,46 @@ ndvi_trt <- ndvi_cper %>%
   group_by(Year, date, graze.trt) %>%
   summarize(NDVI = mean(NDVI))
 
-##### PLOTTING RESULTS #########################################################
-#### Plotting comparison results by PASTURE
-plot_bm.vor_past <- function(past_name) {
+##### PLOTTING DATA ############################################################
+
+### Pasture, TOTAL biomass
+plot_bm.vor_ecosite <- function(past_name) {
   
+  # model output for a single pasture
   apex <- apex.bm_vor_pasture %>% filter(Pasture == past_name)
-  rs <- rs.biomass %>% filter(Pasture == past_name)
-  ndvi <- ndvi_cper %>% filter(Pasture == past_name)
-  field <- field.biomass_past %>% filter(Pasture == past_name)
   
+  ## pulling out filter criteria
+  past_ecosite <- apex$Ecosite %>% unique() # ecological site name
+  carm_name <- apex$CARM_name %>% unique() # CARM name, if applicable
+  
+  ## comparison data sets
+  rs <- rs.biomass_ecosite %>% filter(Ecosite == past_ecosite)
+  ndvi <- ndvi_cper %>% filter(Pasture == past_name | Pasture == carm_name)
+  field <- field.biomass_ecosite %>% filter(Ecosite == past_ecosite)
+  
+  ## scaling for secondary y axis
   coeff <- max(apex$vor.bm_past)/max(ndvi$NDVI)
   
   plot <- ggplot() +
-    geom_line(data = apex, aes(x = date, y = vor.bm_past, color = "APEX")) +
-    geom_line(data = rs, aes(x = date, y = Biomass_kg_ha, color = "Remote Sensing")) +
-    geom_line(data = ndvi, aes(x = date, y = NDVI*coeff, color = "NDVI")) +
-    geom_point(data = field, aes(x = date, y = bm_past)) +
+    geom_line(data = apex, aes(x = date, y = vor.bm_past, color = "APEX"),
+              linewidth = 1) +
+    geom_line(data = rs, aes(x = date, y = Biomass_kg_ha, color = "Remote Sensing"),
+              linewidth = 1) +
+    geom_line(data = ndvi, aes(x = date, y = NDVI*coeff, color = "NDVI"),
+              linewidth = 1) +
+    geom_point(data = field, aes(x = date, y = bm_ecosite)) +
     geom_errorbar(data = field,
                   aes(x = date, 
-                      ymin = pmax(0,(bm_past - bm_se)), 
-                      ymax = (bm_past + bm_se)),
+                      ymin = pmax(0,(bm_ecosite - bm_se)), 
+                      ymax = (bm_ecosite + bm_se)),
                   width = 20, color = "black") +
     facet_wrap(.~Year, scales = "free_x") +
     scale_x_date(date_breaks = "1 month",date_labels = "%m") +
     theme_bw() +
     scale_y_continuous("VOR biomass (kg per ha)",
-                       sec.axis = sec_axis(~./coeff, name = "NDVI")) +
-    xlab("Month of the Year") +
-    labs(color = "Data Source") +
-    ggtitle(paste("Pasture", past_name))
+                       sec.axis = sec_axis(~./coeff, name = "NDVI"))
   
   return(plot)
 }
 
-# plot_bm.vor_past(past_name = "15E")
-plot_bm.vor_past(past_name = "15E")
-
-#### Plotting results by grazing TREATMENT (TRM vs AGM)
-plot_bm.vor_trt <- function(trt_name) {
-  
-  apex <- apex.bm_vor_trt %>% filter(graze.trt == trt_name) 
-  rs <- rs.biomass_trt %>% filter(graze.trt == trt_name)
-  ndvi <- ndvi_trt %>% filter(graze.trt == trt_name) 
-  field <- field.biomass_trt %>% filter(graze.trt == trt_name)
-  
-  coeff <- max(apex$vor.bm_trt)/max(ndvi$NDVI)
-  
-  plot <- ggplot() +
-    geom_line(data = apex, aes(x = date, y = vor.bm_trt, color = "APEX")) +
-    geom_line(data = rs, aes(x = date, y = Biomass_kg_ha, color = "Remote Sensing")) +
-    geom_line(data = ndvi, aes(x = date, y = NDVI*coeff, color = "NDVI")) +
-    geom_point(data = field, aes(x = date, y = bm_trt)) +
-    geom_errorbar(data = field,
-                  aes(x = date, 
-                      ymin = pmax(0,(bm_trt - bm_se)), 
-                      ymax = (bm_trt + bm_se)),
-                  width = 20, color = "black") +
-    facet_wrap(.~Year, scales = "free_x") +
-    scale_x_date(date_breaks = "1 month",date_labels = "%m") +
-    theme_bw() +
-    scale_y_continuous("VOR biomass (kg per ha)",
-                       sec.axis = sec_axis(~./coeff, name = "NDVI")) +
-    xlab("Month of the Year") +
-    labs(color = "Data Source") +
-    ggtitle(paste("Treatment", trt_name))
-  
-  return(plot)
-}
-
-plot_bm.vor_trt(trt_name = "TRM")
-plot_bm.vor_trt(trt_name = "CARM") # doesn't work b/c only have NDVI for 15E and 19N
+plot_bm.vor_ecosite(past_name = "10S")
