@@ -54,15 +54,16 @@ apex_stdl_CPNM <- apex_growing.season %>%
   summarize(STDL = sum(STLD)) 
 
 ## original cage biomass used (day*pasture*plot*functional group)
-biomass.plot <- read.csv("CPER Biomass/CARM_Biomass_cln_attr2023-01-19_DJA_pivots.csv") %>% 
-  group_by(YearSampled, Treatment, Pasture, Ecosite, Plot, FGCode) %>%
+biomass.plot <- read.csv("CPER Biomass/AGM_Biomass_Widecln_attr_2023-07-18.csv") %>% 
+  rename(Year = YearSampled) %>%
+  filter(Year >= 2014)  %>% # filter for year CARM started
+  pivot_longer(cols = AG:NA., names_to = "FGCode", values_to = "kgPerHa") %>%
+  group_by(Year, Pasture, Ecosite, Treatment, Block, Plot, FGCode) %>%
   summarize(kgPerHa = mean(kgPerHa))%>% # summarize by plot of each pasture
   filter(!(Plot == 5 & Pasture == "18S")) %>% # prescribed burn plots
   filter(!(Plot == 6 & Pasture == "18S")) %>%
   filter(!(Plot == 5 & Pasture == "19N")) %>%
-  filter(!(Plot == 6 & Pasture == "19N")) %>%
-  rename(Year = YearSampled) %>%
-  filter(Year >= 2014)
+  filter(!(Plot == 6 & Pasture == "19N"))
 
 # preparing dataframe for plotting SE across plots
 biomass.plot_info <- merge(biomass.plot, pastID_ecosite,
@@ -82,7 +83,7 @@ biomass.plot_info$CPNM2 <- biomass.plot_info$CPNM %>%
 biomass.pasture <-  biomass.plot %>% 
   mutate(Month = 8, Day = 12,
          date = ymd(paste(Year, Month, Day, sep = "-"))
-         ) %>% # adding date info, when collected in field
+  ) %>% # adding date info, when collected in field
   group_by(date, Year, Pasture, Ecosite, Treatment, FGCode) %>%
   summarize(Biomass = mean(kgPerHa)) %>% # summarized by pasture
   rename(CPNM = FGCode, Y = Year) %>%
@@ -564,10 +565,10 @@ plot_bm.prod <- function(veg.output,
 }
 
 
-# plot_bm.prod(veg.output = "CPNM", pasture = T,
-#              func.group = "BOBU", past.name = "19N")
 plot_bm.prod(veg.output = "CPNM", pasture = T,
-             func.group = "BOBU", past.name = "7NW")
+             func.group = "BOBU", past.name = "19N")
+# plot_bm.prod(veg.output = "CPNM", pasture = T,
+#              func.group = "BOBU", past.name = "7NW")
 
 # plot_bm.prod(veg.output = "CPNM", treatment = T,
 #              func.group = "BOBU", trt = "TRM")
