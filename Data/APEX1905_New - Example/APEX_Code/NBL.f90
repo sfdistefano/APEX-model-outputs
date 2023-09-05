@@ -1,0 +1,55 @@
+      SUBROUTINE NBL(BTN,YNI,YNO,QNI,QNO,SSNI,SSNO,DPKN,RN,YNWN,DN,TFO,&
+      YLN,VOL,FNMN,FNMA,FX,FTN,GWNX,BURN,SCOU,PSON,ISA,KBL,KW,NBSA,&
+      MSO,JRT)
+!     APEX1905
+!     THIS SUBPROGRAM COMPUTES THE N & P BALANCES AT THE END OF THE
+!     SIMULATION.
+      DIMENSION NBSA(ISA),KW(MSO)
+	  JRT=0
+      DF=BTN+YNI-YNO+QNI-QNO+SSNI-SSNO-DPKN+RN-YNWN-DN-YLN-VOL+FNMN+&
+      FNMA-FTN+FX+TFO-BURN-SCOU+PSON
+      PER=200.*DF/(FTN+BTN)
+	  SELECT CASE(KBL)
+          CASE(1)
+              ! N BALANCE
+              WRITE(KW(1),4)ISA,NBSA(ISA)
+              WRITE(KW(1),1)PER,DF,BTN,YNI,YNO,QNI,QNO,SSNI,SSNO,&
+              DPKN,RN,YNWN,DN,VOL,BURN,YLN,FX,FNMN,FNMA,TFO,SCOU,&
+              PSON,GWNX,FTN
+              IF(ABS(PER)>.1)WRITE(KW(36),7)ISA,NBSA(ISA),PER
+          CASE(2)
+              ! P BALANCE 
+              WRITE(KW(1),5)ISA,NBSA(ISA)
+              WRITE(KW(1),6)PER,DF,BTN,YNI,YNO,QNI,QNO,DPKN,YNWN,&
+              YLN,FNMN,TFO,SCOU,PSON,FTN
+              IF(ABS(PER)>1.)WRITE(KW(36),8)ISA,NBSA(ISA),PER
+          CASE(3)
+              ! K BALANCE
+              WRITE(KW(1),2)ISA,NBSA(ISA)  
+              WRITE(KW(1),3)PER,DF,BTN,YN,YNWN,QN,PRKN,YLN,FNMN,FTN
+      END SELECT
+      JRT=1
+      RETURN
+    1 FORMAT(5X,'PER =',E13.6,2X,'DF  =',E13.6,2X,'BTOT=',E13.6,2X,&
+      'YI  =',E13.6,2X,'YO  =',E13.6,2X,'QI  =',E13.6/5X,'QO  =',E13.6,&
+      2X,'SSNI=',E13.6,2X,'SSNO=',E13.6,2X,'DPRK=',E13.6,2X,'RFN =',&
+      E13.6,2X,'YWN =',E13.6/5X,'DNIT=',E13.6,2X,'VOL =',E13.6,2X,&
+      'BURN=',E13.6,2X,'YLD =',E13.6,2X,'FIX =',E13.6,2X,'FNMN=',E13.6/&
+      5X,'FNMA=',E13.6,2X,'FNO =',E13.6,2X,'SNOU=',E13.6,2X,'PSON=',&
+      E13.6,2X,'GWSN=',E13.6,2X,'FTOT=',E13.6)
+    2 FORMAT(/T10,'K BALANCE',2X,'SA#= ',I8,1X,'ID= ',I8)
+    3 FORMAT(5X,'PER =',E13.6,2X,'DF  =',E13.6,2X,'BTOT=',E13.6,2X,&
+      'Y   =',E13.6,2X,'YW  =',E13.6,2X,'Q   =',E13.6/5X,'PRK =',E13.6,&
+      2X,'YLD =',E13.6,2X,'FSK =',E13.6,2X,'ETOT=',E13.6)
+    4 FORMAT(/T10,'N BALANCE (kg)',2X,'SA#= ',I8,1X,'ID= ',I8)
+    5 FORMAT(/T10,'P BALANCE (kg)',2X,'SA#= ',I8,1X,'ID= ',I8)
+    6 FORMAT(5X,'PER =',E13.6,2X,'DF  =',E13.6,2X,'BTOT=',E13.6,2X,&
+      'YI  =',E13.6,2X,'YO  =',E13.6,2X,'QI  =',E13.6/5X,'QO  =',E13.6,&
+      2X,'PRK =',E13.6,2X,'YWN =',E13.6,2X,'YLD =',E13.6,2X,'FPML=',&
+      E13.6,2X,'FPO =',E13.6/5X,'SPOU=',E13.6,2X,'PSOP=',E13.6,2X,&
+      'FTOT=',E13.6)
+    7 FORMAT(/T10,'N BALANCE (kg)',2X,'SA#= ',I8,1X,'ID= ',I8,2X,&
+      'PER =',E13.6)
+    8 FORMAT(/T10,'P BALANCE (kg)',2X,'SA#= ',I8,1X,'ID= ',I8,2X,&
+      'PER =',E13.6)
+      END

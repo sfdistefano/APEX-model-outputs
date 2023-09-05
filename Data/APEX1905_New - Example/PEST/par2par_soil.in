@@ -1,0 +1,13 @@
+* parameter data
+UW1           =             .0178
+UW2           =             .0202
+UW3           =             .0102
+UW4           =             .0019
+UW5           =             .1592
+FC1           =             .0666
+FC2           =             .0638
+FC3           =             .0237
+FC4           =             .3518
+FC5           =             .3385
+* template and model input data
+C:\APEX1905_New\APEX1905_New\PEST\soil.tpl     C:\APEX1905_New\APEX1905_New\PEST\ulm.sol

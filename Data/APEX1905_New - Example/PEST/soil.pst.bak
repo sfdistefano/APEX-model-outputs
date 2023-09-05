@@ -1,0 +1,56 @@
+pcf
+* control data
+norestart  estimation
+         5        22         5         0         1                          
+         1         2    single     point         1            0            0
+        10         2       0.3      0.01        10   lamforgive   derforgive
+         5         5     0.001                                              
+       0.1         1                                                        
+         0      0.01         3         3      0.01            3             
+         1         1         1                                              
+* singular value decomposition
+ 1 
+7  0.001
+ 1 
+* parameter groups
+       lg1  relative      0.01     0.001    switch         2 parabolic
+       lg2  relative       0.1      0.01    switch         2 parabolic
+       lg3  relative       0.5         5    switch         2 parabolic
+       lg4  relative     0.001    0.0001    switch         2 parabolic
+       lg5  relative    0.0001   0.00001    switch         2 parabolic
+* parameter data
+       UW1       log    factor      0.15      0.08      0.23       lg1         1         0         1
+       UW2       log    factor      0.15      0.08      0.23       lg1         1         0         1
+       UW3       log    factor      0.26      0.13      0.39       lg1         1         0         1
+       UW4       log    factor      0.24      0.12      0.36       lg1         1         0         1
+       UW5       log    factor      0.19       0.1      0.29       lg1         1         0         1
+* observation groups                                                                                          
+     VOR_B                                                                                          
+* observation data                                                                                          
+   VOR_B_1    613.46      0.05     VOR_B                                                            
+   VOR_B_2   1417.08      0.05     VOR_B                                                            
+   VOR_B_3    941.25      0.05     VOR_B                                                            
+   VOR_B_4    838.33      0.05     VOR_B                                                            
+   VOR_B_5   1014.05      0.05     VOR_B                                                            
+   VOR_B_6    1142.1      0.05     VOR_B                                                            
+   VOR_B_7    704.06      0.05     VOR_B                                                            
+   VOR_B_8    965.09      0.05     VOR_B                                                            
+   VOR_B_9    737.85      0.05     VOR_B                                                            
+  VOR_B_10    848.66      0.05     VOR_B                                                            
+  VOR_B_11      1003      0.05     VOR_B                                                            
+  VOR_B_12    559.26      0.05     VOR_B                                                            
+  VOR_B_13    936.66      0.05     VOR_B                                                            
+  VOR_B_14    987.01      0.05     VOR_B                                                            
+  VOR_B_15    834.96      0.05     VOR_B                                                            
+  VOR_B_16    547.25      0.05     VOR_B                                                            
+  VOR_B_17    511.58      0.05     VOR_B                                                            
+  VOR_B_18    300.26      0.05     VOR_B                                                            
+  VOR_B_19   1098.59      0.05     VOR_B                                                            
+  VOR_B_20    672.35      0.05     VOR_B                                                            
+  VOR_B_21     705.9      0.05     VOR_B                                                            
+  VOR_B_22     872.1      0.05     VOR_B                                                            
+* model command line                                                                                          
+C:\APEX1905_New\APEX1905_New\PEST\APEX.BAT                                                                                          
+* model input/output                                                                                          
+C:\APEX1905_New\APEX1905_New\PEST\ulm.tpl     C:\APEX1905_New\APEX1905_New\PEST\par2par_ulm.in                                                                                          
+C:\APEX1905_New\APEX1905_New\PEST\CPER_EXP.ins     C:\APEX1905_New\APEX1905_New\PEST\CONUNN_AGM.CMP                                                                                          

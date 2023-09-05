@@ -1,0 +1,60 @@
+1
+
+                                             * * * * * * * * *  L H S  * * * * * * * * *
+
+                                             LATIN HYPERCUBE AND RANDOM SAMPLING PROGRAM
+
+                                             * * * * * * * * * * * * * * * * * * * * * *
+
+
+    Run on  8/28/23 at 15:43:26.38 with LHS Version: 2.30 Release 1, Compiled May 31, 2001        
+
+
+0    LHS DATASET BUILT FROM PEST CONTROL FILE LHSSAMPLE.PST.
+
+    Random Seed =   265564541
+
+    Number of Variables =  17
+
+    Number of Observations =   30
+0   The sample was written to the file: LHSSAMPLE.LSP
+0   Input was read from the file: LHSsample.dat
+1
+
+    LHS DATASET BUILT FROM PEST CONTROL FILE LHSSAMPLE.PST.                                                                      
+
+    VARIABLE  DISTRIBUTION          RANGE            LABEL
+0       1     BOUNDED LOG    18.8     TO   31.2                                                        
+                           MU =   3.19                   SIGMA =  8.514E-02
+0       2     BOUNDED LOG   2.000E-02 TO  3.000E-02                                                    
+                           MU =  -3.71                   SIGMA =  6.758E-02
+0       3     BOUNDED LOG    11.2     TO   18.8                                                        
+                           MU =   2.68                   SIGMA =  8.514E-02
+0       4     BOUNDED LOG    3.00     TO   5.00                                                        
+                           MU =   1.35                   SIGMA =  8.514E-02
+0       5     BOUNDED LOG    1.88     TO   3.13                                                        
+                           MU =  0.886                   SIGMA =  8.496E-02
+0       6     BOUNDED LOG   0.640     TO   1.06                                                        
+                           MU = -0.194                   SIGMA =  8.409E-02
+0       7     BOUNDED LOG    3.79     TO   6.31                                                        
+                           MU =   1.59                   SIGMA =  8.496E-02
+0       8     BOUNDED LOG    38.2     TO   63.7                                                        
+                           MU =   3.90                   SIGMA =  8.516E-02
+0       9     BOUNDED LOG   0.450     TO  0.750                                                        
+                           MU = -0.543                   SIGMA =  8.514E-02
+0      10     BOUNDED LOG    1.12     TO   1.87                                                        
+                           MU =  0.370                   SIGMA =  8.543E-02
+0      11     BOUNDED LOG    3.76     TO   6.26                                                        
+                           MU =   1.58                   SIGMA =  8.496E-02
+0      12     BOUNDED LOG    11.3     TO   18.9                                                        
+                           MU =   2.68                   SIGMA =  8.511E-02
+0      13     BOUNDED LOG    6.00     TO   10.0                                                        
+                           MU =   2.05                   SIGMA =  8.514E-02
+0      14     BOUNDED LOG   0.380     TO  0.630                                                        
+                           MU = -0.715                   SIGMA =  8.426E-02
+0      15     BOUNDED LOG    3.23     TO   5.38                                                        
+                           MU =   1.43                   SIGMA =  8.503E-02
+0      16     BOUNDED LOG    38.2     TO   63.7                                                        
+                           MU =   3.90                   SIGMA =  8.516E-02
+0      17     BOUNDED LOG    11.2     TO   18.8                                                        
+                           MU =   2.68                   SIGMA =  8.514E-02

@@ -1,0 +1,28 @@
+      SUBROUTINE NSTDFAL(ZZ)
+!     APEX1905
+!     THIS SUBPROGRAM SIMULATES THE CONVERSION OF STANDING DEAD CROP
+!     RESIDUE TO FLAT RESIDUE.
+      USE PARM
+      LD1=LID(1,ISA)
+      SUM=0.
+      TOT=0.
+      DO K=1,LC
+          IF(STD(K,ISA)<.001)CYCLE
+          Z1=ZZ*STD(K,ISA)
+          STD(K,ISA)=MAX(0.,STD(K,ISA)-Z1)
+          SUM=SUM+Z1
+          Z2=ZZ*STDN(K,ISA)
+          STDN(K,ISA)=MAX(0.,STDN(K,ISA)-Z2)
+          TOT=TOT+Z2
+          Z3=ZZ*STDP(K,ISA)
+          STDP(K,ISA)=STDP(K,ISA)-Z3
+          FOP(LD1,ISA)=FOP(LD1,ISA)+Z3
+          ZS=ZZ*STDK(K,ISA)
+          SOLK(LD1,ISA)=SOLK(LD1,ISA)+ZS
+          STDK(K,ISA)=MAX(1.E-5,STDK(K,ISA)-ZS)
+          Z4=ZZ*STDL(K,ISA)
+          STDL(K,ISA)=MAX(1.E-5,STDL(K,ISA)-Z4)
+      END DO
+      CALL NCNSTD(SUM,TOT,LD1)
+      RETURN
+      END

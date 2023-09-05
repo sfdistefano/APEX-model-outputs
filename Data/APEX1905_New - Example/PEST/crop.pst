@@ -1,0 +1,106 @@
+pcf
+* control data
+norestart  estimation
+        17        61         5         0         1                          
+         1         1    single     point         1            0            0
+        10         2       0.3      0.01        10   lamforgive   derforgive
+         5         5     0.001                                              
+       0.1         1                                                        
+         2      0.01         3         3      0.01            3             
+         1         1         1                                              
+* singular value decomposition
+ 1 
+7  0.001
+ 1 
+* parameter groups
+       lg1  relative      0.01     0.001    switch         2 parabolic
+       lg2  relative       0.1      0.01    switch         2 parabolic
+       lg3  relative       0.5         5    switch         2 parabolic
+       lg4  relative     0.001    0.0001    switch         2 parabolic
+       lg5  relative    0.0001   0.00001    switch         2 parabolic
+* parameter data
+     31001       log    factor        25     18.75     31.25       lg1         1         0         1
+     31002       log    factor      0.02      0.02      0.03       lg1         1         0         1
+     31003       log    factor        15     11.25     18.75       lg1         1         0         1
+     31004       log    factor         4         3         5       lg1         1         0         1
+     31005       log    factor       2.5      1.88      3.13       lg1         1         0         1
+     31006       log    factor      0.85      0.64      1.06       lg1         1         0         1
+     31007       log    factor      5.05      3.79      6.31       lg1         1         0         1
+     31008       log    factor     50.99     38.24     63.74       lg1         1         0         1
+     31015       log    factor       0.6      0.45      0.75       lg1         1         0         1
+     31016       log    factor    1.4999      1.12      1.87       lg1         1         0         1
+     31040       log    factor      5.01      3.76      6.26       lg1         1         0         1
+     31041       log    factor      15.1     11.33     18.88       lg1         1         0         1
+     31042       log    factor         8         6        10       lg1         1         0         1
+     31043       log    factor       0.5      0.38      0.63       lg1         1         0         1
+     31048       log    factor       4.3      3.23      5.38       lg1         1         0         1
+     31049       log    factor     50.99     38.24     63.74       lg1         1         0         1
+     31065       log    factor        15     11.25     18.75       lg1         1         0         1
+* observation groups                              
+    CAGE_B                              
+* observation data                              
+  CAGE_B_1     11.44      0.05    CAGE_B
+  CAGE_B_2    508.29      0.05    CAGE_B
+  CAGE_B_3     62.13      0.05    CAGE_B
+  CAGE_B_4     47.42      0.05    CAGE_B
+  CAGE_B_5     41.48      0.05    CAGE_B
+  CAGE_B_6      92.3      0.05    CAGE_B
+  CAGE_B_7     13.63      0.05    CAGE_B
+  CAGE_B_8    506.08      0.05    CAGE_B
+  CAGE_B_9     34.92      0.05    CAGE_B
+ CAGE_B_10    316.66      0.05    CAGE_B
+ CAGE_B_11     136.5      0.05    CAGE_B
+ CAGE_B_12     22.79      0.05    CAGE_B
+ CAGE_B_13     17.66      0.05    CAGE_B
+ CAGE_B_14    688.34      0.05    CAGE_B
+ CAGE_B_15     74.89      0.05    CAGE_B
+ CAGE_B_16     92.06      0.05    CAGE_B
+ CAGE_B_17     91.16      0.05    CAGE_B
+ CAGE_B_18     50.48      0.05    CAGE_B
+ CAGE_B_19     36.83      0.05    CAGE_B
+ CAGE_B_20    391.03      0.05    CAGE_B
+ CAGE_B_21     64.44      0.05    CAGE_B
+ CAGE_B_22    339.46      0.05    CAGE_B
+ CAGE_B_23     58.03      0.05    CAGE_B
+ CAGE_B_24     63.74      0.05    CAGE_B
+ CAGE_B_25     14.46      0.05    CAGE_B
+ CAGE_B_26    345.09      0.05    CAGE_B
+ CAGE_B_27    105.44      0.05    CAGE_B
+ CAGE_B_28     30.11      0.05    CAGE_B
+ CAGE_B_29     88.36      0.05    CAGE_B
+ CAGE_B_30    159.74      0.05    CAGE_B
+ CAGE_B_31     29.77      0.05    CAGE_B
+ CAGE_B_32    217.29      0.05    CAGE_B
+ CAGE_B_33     47.09      0.05    CAGE_B
+ CAGE_B_34    328.19      0.05    CAGE_B
+ CAGE_B_35     26.71      0.05    CAGE_B
+ CAGE_B_36     53.92      0.05    CAGE_B
+ CAGE_B_37     35.42      0.05    CAGE_B
+ CAGE_B_38    424.92      0.05    CAGE_B
+ CAGE_B_39    167.89      0.05    CAGE_B
+ CAGE_B_40    313.52      0.05    CAGE_B
+ CAGE_B_41    463.81      0.05    CAGE_B
+ CAGE_B_42     15.46      0.05    CAGE_B
+ CAGE_B_43      5.64      0.05    CAGE_B
+ CAGE_B_44    202.83      0.05    CAGE_B
+ CAGE_B_45     89.66      0.05    CAGE_B
+ CAGE_B_46     37.09      0.05    CAGE_B
+ CAGE_B_47     18.52      0.05    CAGE_B
+ CAGE_B_48         0      0.05    CAGE_B
+ CAGE_B_49     16.21      0.05    CAGE_B
+ CAGE_B_50    169.83      0.05    CAGE_B
+ CAGE_B_51    278.69      0.05    CAGE_B
+ CAGE_B_52    479.83      0.05    CAGE_B
+ CAGE_B_53    143.72      0.05    CAGE_B
+ CAGE_B_54     57.41      0.05    CAGE_B
+ CAGE_B_55      2.42      0.05    CAGE_B
+ CAGE_B_56     79.48      0.05    CAGE_B
+ CAGE_B_57     31.87      0.05    CAGE_B
+ CAGE_B_58      1.26      0.05    CAGE_B
+ CAGE_B_59     23.31      0.05    CAGE_B
+ CAGE_B_60      7.31      0.05    CAGE_B
+* model command line                              
+D:\APEX1905_New\PEST\APEX.BAT                              
+* model input/output                              
+D:\APEX1905_New\PEST\par2par_crop.tpl     D:\APEX1905_New\PEST\par2par_crop.in                              
+D:\APEX1905_New\PEST\CPER_EXP.ins     D:\APEX1905_New\PEST\CONUNN_AGM.CMP                              

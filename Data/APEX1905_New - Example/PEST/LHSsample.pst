@@ -1,0 +1,38 @@
+pcf
+* control data
+norestart  estimation
+        17        61         5         0         1                          
+         1         1    single     point         1            0            0
+        10         2       0.3      0.01        10   lamforgive   derforgive
+         5         5     0.001                                              
+       0.1         1                                                        
+         2      0.01         3         3      0.01            3             
+         1         1         1                                              
+* singular value decomposition
+ 1 
+7  0.001
+ 1 
+* parameter groups
+       lg1  relative      0.01     0.001    switch         2 parabolic
+       lg2  relative       0.1      0.01    switch         2 parabolic
+       lg3  relative       0.5         5    switch         2 parabolic
+       lg4  relative     0.001    0.0001    switch         2 parabolic
+       lg5  relative    0.0001   0.00001    switch         2 parabolic
+* parameter data
+     31001       log    factor        25     18.75     31.25       lg1         1         0         1
+     31002       log    factor      0.02      0.02      0.03       lg1         1         0         1
+     31003       log    factor        15     11.25     18.75       lg1         1         0         1
+     31004       log    factor         4         3         5       lg1         1         0         1
+     31005       log    factor       2.5      1.88      3.13       lg1         1         0         1
+     31006       log    factor      0.85      0.64      1.06       lg1         1         0         1
+     31007       log    factor      5.05      3.79      6.31       lg1         1         0         1
+     31008       log    factor     50.99     38.24     63.74       lg1         1         0         1
+     31015       log    factor       0.6      0.45      0.75       lg1         1         0         1
+     31016       log    factor    1.4999      1.12      1.87       lg1         1         0         1
+     31040       log    factor      5.01      3.76      6.26       lg1         1         0         1
+     31041       log    factor      15.1     11.33     18.88       lg1         1         0         1
+     31042       log    factor         8         6        10       lg1         1         0         1
+     31043       log    factor       0.5      0.38      0.63       lg1         1         0         1
+     31048       log    factor       4.3      3.23      5.38       lg1         1         0         1
+     31049       log    factor     50.99     38.24     63.74       lg1         1         0         1
+     31065       log    factor        15     11.25     18.75       lg1         1         0         1

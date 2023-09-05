@@ -1,0 +1,30 @@
+      SUBROUTINE ACOUT(XX,QQ,GKG)
+!     APEX1905
+!     THIS SUBPROGRAM CONVERTS 2 NUMBERS(MATERIAL MASS AND WATER VOL)
+!     TO 1 NUMBER. THE NEW NUMBER HAS MASS IN G OR KG(GKG) ON THE LEFT
+!     OF THE DECIMAL AND CONCENTRATION ON THE RIGHT. THE FIRST THREE
+!     DIGITS TO THE RIGHT ARE CONCENTRATION AND THE 4TH DIGIT GIVES
+!     PARTS PER THOUSAND(0), MILLION(1), BILLION(2), TRILLION(3)
+      USE PARM
+      IF(XX<1.E-10)RETURN
+      X1=.1*GKG*XX/(QQ+1.E-10)
+      IF(X1<1000.)THEN
+          DO I=1,3
+              N2=X1
+              IF(N2>0)EXIT
+              X1=X1*1.D3
+          END DO
+          I=MIN(I,3)
+          XI=I
+          ELSE
+          XI=0.
+          X1=.001*X1
+      END IF    
+      N2=XX+.5
+      X2=N2
+      N1=X1+.5
+      X1=N1
+      X3=1.D-3*X1+1.D-4*XI
+      XX=X2+X3
+      RETURN
+      END

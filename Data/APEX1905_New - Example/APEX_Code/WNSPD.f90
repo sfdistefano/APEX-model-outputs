@@ -1,0 +1,9 @@
+      SUBROUTINE WNSPD
+!     APEX1905
+!     THIS SUBPROGRAM SIMULATES MEAN DAILY WIND SPEED @ 10 M HEIGHT.
+      USE PARM 
+      V6=AUNIF(IDG(5))
+      IF(V6<0.0001)V6=0.003                          ! SU  2020
+      U10(1)=UAVM(MO)*(-LOG(V6))**UXP
+      RETURN
+      END

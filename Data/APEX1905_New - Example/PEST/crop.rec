@@ -1,0 +1,342 @@
+
+                       PEST RUN RECORD: CASE crop
+
+
+PEST Version: 13.0
+
+
+PEST run mode:-
+
+   Parameter estimation mode
+
+
+Case dimensions:-
+
+   Number of parameters                           :     7
+   Number of adjustable parameters                :     7
+   Number of parameter groups                     :     5
+   Number of observations                         :    22
+   Number of prior estimates                      :     0
+
+
+Model command line(s):-
+
+   C:\APEX1905_New\APEX1905_New\PEST\APEX.BAT
+
+
+Jacobian command line:-
+
+   na
+
+
+Model interface files:-
+
+   Templates:
+      C:\APEX1905_New\APEX1905_New\PEST\par2par_crop.tpl
+   for model input files:
+      C:\APEX1905_New\APEX1905_New\PEST\par2par_crop.in
+
+   (Parameter values written using single precision protocol.)
+   (Decimal point always included.)
+
+   Instruction files:
+      C:\APEX1905_New\APEX1905_New\PEST\CPER_EXP.ins
+   for reading model output files:
+      C:\APEX1905_New\APEX1905_New\PEST\CONUNN_AGM.CMP
+
+
+PEST-to-model message file:-
+
+   na
+
+
+Singular value decomposition:-
+
+   Perform SVD on XtQX or Q^(1/2)X               : XtQX
+   Max. number of singular values to employ      : 7
+   Ratio of lowest/highest singular value        :  1.000000E-03
+   Record eigenvectors in SVD file               : yes
+
+
+Derivatives calculation:-
+
+Param        Increment   Increment   Increment   Forward or   Multiplier  Method
+group        type                    low bound   central      (central)   (central)
+lg1          relative    1.0000E-02  1.0000E-03    switch       2.000     parabolic
+lg2          relative    0.1000      1.0000E-02    switch       2.000     parabolic
+lg3          relative    0.5000       5.000        switch       2.000     parabolic
+lg4          relative    1.0000E-03  1.0000E-04    switch       2.000     parabolic
+lg5          relative    1.0000E-04  1.0000E-05    switch       2.000     parabolic
+
+
+Parameter definitions:-
+
+Name         Trans-            Change       Initial        Lower          Upper
+             formation         limit        value          bound          bound
+30001        log               factor      12.0700        6.04000        18.1100    
+30101        log               factor      16.2700        8.14000        24.4100    
+31001        log               factor      9.06716        4.53000        13.6000    
+32101        log               factor      19.2200        9.61000        28.8300    
+33001        log               factor      12.3316        6.17000        18.5000    
+34001        log               factor      22.7100        11.3600        34.0700    
+35101        log               factor      14.5943        7.30000        21.8900    
+
+Name         Group          Scale         Offset        Model command number
+30001        lg1           1.00000        0.00000            1
+30101        lg1           1.00000        0.00000            1
+31001        lg1           1.00000        0.00000            1
+32101        lg1           1.00000        0.00000            1
+33001        lg1           1.00000        0.00000            1
+34001        lg1           1.00000        0.00000            1
+35101        lg1           1.00000        0.00000            1
+
+
+Prior information:-
+
+   No prior information supplied
+
+
+Observations:-
+
+Observation name        Observation       Weight       Group
+ vor_b_1                 613.460         5.0000E-02   vor_b       
+ vor_b_2                 1417.08         5.0000E-02   vor_b       
+ vor_b_3                 941.250         5.0000E-02   vor_b       
+ vor_b_4                 838.330         5.0000E-02   vor_b       
+ vor_b_5                 1014.05         5.0000E-02   vor_b       
+ vor_b_6                 1142.10         5.0000E-02   vor_b       
+ vor_b_7                 704.060         5.0000E-02   vor_b       
+ vor_b_8                 965.090         5.0000E-02   vor_b       
+ vor_b_9                 737.850         5.0000E-02   vor_b       
+ vor_b_10                848.660         5.0000E-02   vor_b       
+ vor_b_11                1003.00         5.0000E-02   vor_b       
+ vor_b_12                559.260         5.0000E-02   vor_b       
+ vor_b_13                936.660         5.0000E-02   vor_b       
+ vor_b_14                987.010         5.0000E-02   vor_b       
+ vor_b_15                834.960         5.0000E-02   vor_b       
+ vor_b_16                547.250         5.0000E-02   vor_b       
+ vor_b_17                511.580         5.0000E-02   vor_b       
+ vor_b_18                300.260         5.0000E-02   vor_b       
+ vor_b_19                1098.59         5.0000E-02   vor_b       
+ vor_b_20                672.350         5.0000E-02   vor_b       
+ vor_b_21                705.900         5.0000E-02   vor_b       
+ vor_b_22                872.100         5.0000E-02   vor_b       
+
+
+Control settings:-
+
+   Initial lambda                                               :  10.000    
+   Lambda adjustment factor                                     :  2.0000    
+   Sufficient new/old phi ratio per optimisation iteration      : 0.30000    
+   Limiting relative phi reduction between lambdas              : 1.00000E-02
+   Maximum trial lambdas per iteration                          :  10
+   Forgive model run failure during lamda testing               : yes
+   Forgive model run failure during Jacobian runs               : yes
+
+   Perform Broyden's update of Jacobian matrix                  : no
+   Undertake observation re-referencing                         : no
+
+   Maximum  factor  parameter change (factor-limited changes)   :  5.0000
+   Maximum relative parameter change (relative-limited changes) : na
+   Fraction of initial parameter values used in computing
+   change limit for near-zero parameters                        : 1.00000E-03
+   Allow bending of parameter upgrade vector                    : no
+   Allow parameters to stick to their bounds                    : no
+
+   Relative phi reduction below which to begin use of
+   central derivatives                                          : 0.10000             
+   Iteration at which to first consider derivatives switch      :   1
+
+   Relative phi reduction indicating convergence                : 0.10000E-01
+   Number of phi values required within this range              :   3
+   Maximum number of consecutive failures to lower phi          :   3
+   Minimal relative parameter change indicating convergence     : 0.10000E-01
+   Number of consecutive iterations with minimal param change   :   3
+   Maximum number of optimisation iterations                    :   2
+
+   Attempt automatic user intervention                          : no
+
+   Attempt reuse of parameter sensitivities                     : no
+
+   Scale parameters by their bounds                             : no
+
+
+File saving options: -
+
+   Save best JCO file                                           : yes
+   Save multiple JCO files                                      : no
+   Save multiple REI files                                      : no
+   Save multiple PAR files                                      : no
+
+
+                            OPTIMISATION RECORD
+
+
+INITIAL CONDITIONS: 
+   Sum of squared weighted residuals (ie phi) =   6150.4    
+
+      Current parameter values
+      30001            12.0700    
+      30101            16.2700    
+      31001            9.06716    
+      32101            19.2200    
+      33001            12.3316    
+      34001            22.7100    
+      35101            14.5943    
+
+
+OPTIMISATION ITERATION NO.        : 1
+   Model calls so far             : 1
+   Starting phi for this iteration:   6150.4    
+
+       Lambda =   10.000     ----->
+          Phi =   4150.0      (  0.675 of starting phi)
+
+       Lambda =   5.0000     ----->
+          Phi =   4216.1      (  0.686 of starting phi)
+
+       Lambda =   20.000     ----->
+          Phi =   4345.9      (  0.707 of starting phi)
+
+   No more lambdas: phi rising
+   Lowest phi this iteration:   4150.0    
+
+      Current parameter values                 Previous parameter values
+      30001            12.9195                 30001             12.0700    
+      30101            13.3381                 30101             16.2700    
+      31001            9.41156                 31001             9.06716    
+      32101            19.2563                 32101             19.2200    
+      33001            12.6511                 33001             12.3316    
+      34001            23.2438                 34001             22.7100    
+      35101            15.2875                 35101             14.5943    
+   Maximum   factor change:  1.220     ["30101"]
+   Maximum relative change: 0.1802     ["30101"]
+
+
+OPTIMISATION ITERATION NO.        : 2
+   Model calls so far             : 11
+   Starting phi for this iteration:   4150.0    
+
+       Lambda =   10.000     ----->
+          Phi =   4109.3      (  0.990 of starting phi)
+
+       Lambda =   5.0000     ----->
+          Phi =   4346.7      (  1.047 times starting phi)
+
+       Lambda =   20.000     ----->
+          Phi =   3994.9      (  0.963 of starting phi)
+
+       Lambda =   40.000     ----->
+          Phi =   3902.1      (  0.940 of starting phi)
+
+       Lambda =   80.000     ----->
+          Phi =   3953.6      (  0.953 of starting phi)
+
+   No more lambdas: phi rising
+   Lowest phi this iteration:   3902.1    
+   Relative phi reduction between optimisation iterations less than 0.1000
+   Switch to central derivatives calculation
+
+      Current parameter values                 Previous parameter values
+      30001            18.1100                 30001             12.9195    
+      30101            13.4947                 30101             13.3381    
+      31001            7.24151                 31001             9.41156    
+      32101            14.5212                 32101             19.2563    
+      33001            18.2078                 33001             12.6511    
+      34001            19.7335                 34001             23.2438    
+      35101            14.8020                 35101             15.2875    
+   Maximum   factor change:  1.439     ["33001"]
+   Maximum relative change: 0.4392     ["33001"]
+
+   Optimisation complete: optimisation iteration limit of   2 realized.
+   Total model calls:     23
+
+   The model has been run one final time using best parameters. 
+   Thus all model input files contain best parameter values, and model 
+   output files contain model results based on these parameters.
+
+
+                            OPTIMISATION RESULTS
+
+Covariance matrix and parameter confidence intervals cannot be determined:-
+Some form or regularisation was implemented so these are not applicable.
+
+
+Parameters ----->
+
+Parameter      Estimated value
+ 30001           18.1100    
+ 30101           13.4947    
+ 31001           7.24151    
+ 32101           14.5212    
+ 33001           18.2078    
+ 34001           19.7335    
+ 35101           14.8020    
+
+See file crop.sen for parameter sensitivities.
+
+
+Observations ----->
+
+Observation            Measured       Calculated     Residual       Weight     Group
+                       value          value
+vor_b_1                613.460        321.720        291.740       5.0000E-02  vor_b       
+vor_b_2                1417.08        1478.70       -61.6200       5.0000E-02  vor_b       
+vor_b_3                941.250        1103.10       -161.850       5.0000E-02  vor_b       
+vor_b_4                838.330        789.920        48.4100       5.0000E-02  vor_b       
+vor_b_5                1014.05        565.330        448.720       5.0000E-02  vor_b       
+vor_b_6                1142.10        986.220        155.880       5.0000E-02  vor_b       
+vor_b_7                704.060        576.310        127.750       5.0000E-02  vor_b       
+vor_b_8                965.090        994.410       -29.3200       5.0000E-02  vor_b       
+vor_b_9                737.850        627.500        110.350       5.0000E-02  vor_b       
+vor_b_10               848.660        454.270        394.390       5.0000E-02  vor_b       
+vor_b_11               1003.00        446.350        556.650       5.0000E-02  vor_b       
+vor_b_12               559.260        361.440        197.820       5.0000E-02  vor_b       
+vor_b_13               936.660        772.060        164.600       5.0000E-02  vor_b       
+vor_b_14               987.010        770.920        216.090       5.0000E-02  vor_b       
+vor_b_15               834.960        476.440        358.520       5.0000E-02  vor_b       
+vor_b_16               547.250        388.320        158.930       5.0000E-02  vor_b       
+vor_b_17               511.580        380.680        130.900       5.0000E-02  vor_b       
+vor_b_18               300.260        257.490        42.7700       5.0000E-02  vor_b       
+vor_b_19               1098.59        1268.11       -169.520       5.0000E-02  vor_b       
+vor_b_20               672.350        1262.79       -590.440       5.0000E-02  vor_b       
+vor_b_21               705.900        941.190       -235.290       5.0000E-02  vor_b       
+vor_b_22               872.100        939.790       -67.6900       5.0000E-02  vor_b       
+
+See file crop.res for more details of residuals in graph-ready format.
+
+See file crop.seo for composite observation sensitivities.
+
+
+Objective function ----->
+
+  Sum of squared weighted residuals (ie phi)                =   3902.    
+
+
+Correlation Coefficient ----->
+
+  Correlation coefficient                                   =  0.68305    
+
+
+Analysis of residuals ----->
+
+  All residuals:-
+     Number of residuals with non-zero weight                       =    22
+     Mean value of non-zero weighted residuals                      =   4.745    
+     Maximum weighted residual [observation "vor_b_11"]             =   27.83    
+     Minimum weighted residual [observation "vor_b_20"]             =  -29.52    
+     Standard variance of weighted residuals                        =   260.1    
+     Standard error of weighted residuals                           =   16.13    
+
+     Note: the above variance was obtained by dividing the objective 
+     function by the number of system degrees of freedom (ie. number of 
+     observations with non-zero weight plus number of prior information 
+     articles with non-zero weight minus the number of adjustable parameters.)
+     If the degrees of freedom is negative the divisor becomes 
+     the number of observations with non-zero weight plus the number of 
+     prior information items with non-zero weight.
+
+
+Covariance and other statistical matrices cannot be determined:-
+Some form or regularisation was implemented so these are not applicable.
+

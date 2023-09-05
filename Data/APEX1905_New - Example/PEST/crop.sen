@@ -1,0 +1,39 @@
+                        PARAMETER SENSITIVITIES: CASE crop
+
+
+ OPTIMISATION ITERATION NO.  1 ----->
+ Parameter name    Group          Current value    Sensitivity
+   30001           lg1              12.0700          13.8483    
+   30101           lg1              16.2700          29.6817    
+   31001           lg1              9.06716          10.1853    
+   32101           lg1              19.2200          13.1113    
+   33001           lg1              12.3316          6.62430    
+   34001           lg1              22.7100          14.9013    
+   35101           lg1              14.5943          14.3790    
+
+
+ OPTIMISATION ITERATION NO.  2 ----->
+ Parameter name    Group          Current value    Sensitivity
+   30001           lg1              12.9195          2.52688    
+   30101           lg1              13.3381          18.9542    
+   31001           lg1              9.41156          4.26891    
+   32101           lg1              19.2563          7.50286    
+   33001           lg1              12.6511          3.24452    
+   34001           lg1              23.2438          4.56241    
+   35101           lg1              15.2875          1.73168    
+
+
+
+                        COMPLETION OF OPTIMISATION PROCESS
+
+ Composite sensitivities for all observations/prior info ----->
+
+ Number of observations with non-zero weight =    22
+ Parameter name    Group          Current value    Sensitivity
+   30001           lg1              18.1100          2.52688    
+   30101           lg1              13.4947          18.9542    
+   31001           lg1              7.24151          4.26891    
+   32101           lg1              14.5212          7.50286    
+   33001           lg1              18.2078          3.24452    
+   34001           lg1              19.7335          4.56241    
+   35101           lg1              14.8020          1.73168    

@@ -1,0 +1,28 @@
+      SUBROUTINE WRWD(I,JNT)
+!     APEX1905
+!     THIS SUBPROGRAM DETERMINES RAINFALL OCCURENCE AND AMOUNT.
+!     AMOUNT IS ESTIMATED BY CALLING SUBPROGRAM WRAIN OR FROM A
+!     MODIFIED EXPONENTIAL DISTRIBUTION.
+      USE PARM 
+      IF(JNT==0)THEN
+          RN=1.-AUNIF(IDG(1))
+          IF(RN>PRW(LW,IWI,MO)+.001)THEN
+              RFV0(I)=0.
+              LW=1
+              RETURN
+          END IF
+      END IF
+      V4(ISA)=AUNIF(IDG(3))
+      IF(ICDP==0)THEN
+!          R6=RST(3,IWI,MO)/6.
+          R6=RFSK/6.
+          ZZ=ADSTN(V3(ISA),V4(ISA))
+          RFV0(I)=WRAIN(R6,ZZ,RFSD,RFSK,RFVM)*PCF(IWI,MO)
+          V3(ISA)=V4(ISA)
+      ELSE
+!          RFV0(I)=RST(1,IWI,MO)*(-LOG(V4))**EXPK
+          RFV0(I)=RFVM*(-LOG(V4(ISA)))**EXPK
+      END IF
+      LW=2
+      RETURN
+      END

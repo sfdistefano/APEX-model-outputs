@@ -1,0 +1,61 @@
+pcf
+* control data
+norestart  estimation
+        10        22         5         0         1                          
+         1         1    single     point         1            0            0
+        10         2       0.3      0.01        10   lamforgive   derforgive
+         5         5     0.001                                              
+       0.1         1                                                        
+         0      0.01         3         3      0.01            3             
+         1         1         1                                              
+* singular value decomposition
+ 1 
+10  0.001
+ 1 
+* parameter groups
+       lg1  relative      0.01     0.001    switch         2 parabolic
+       lg2  relative       0.1      0.01    switch         2 parabolic
+       lg3  relative       0.5         5    switch         2 parabolic
+       lg4  relative     0.001    0.0001    switch         2 parabolic
+       lg5  relative    0.0001   0.00001    switch         2 parabolic
+* parameter data
+       UW1       log    factor    0.0205      0.01     0.031       lg1         1         0         1
+       UW2       log    factor    0.0257     0.013     0.039       lg1         1         0         1
+       UW3       log    factor    0.0125     0.006     0.019       lg1         1         0         1
+       UW4       log    factor    0.0029     0.001     0.004       lg1         1         0         1
+       UW5       log    factor    0.1532     0.077      0.23       lg1         1         0         1
+       FC1       log    factor    0.0762     0.038     0.114       lg1         1         0         1
+       FC2       log    factor    0.0904     0.045     0.136       lg1         1         0         1
+       FC3       log    factor    0.0348     0.019     0.052       lg1         1         0         1
+       FC4       log    factor    0.3251     0.163     0.445       lg1         1         0         1
+       FC5       log    factor    0.3128      0.23       0.4       lg1         1         0         1
+* observation groups                                                                                          
+     VOR_B                                                                                          
+* observation data                                                                                          
+   VOR_B_1    613.46      0.05     VOR_B                                                            
+   VOR_B_2   1417.08      0.05     VOR_B                                                            
+   VOR_B_3    941.25      0.05     VOR_B                                                            
+   VOR_B_4    838.33      0.05     VOR_B                                                            
+   VOR_B_5   1014.05      0.05     VOR_B                                                            
+   VOR_B_6    1142.1      0.05     VOR_B                                                            
+   VOR_B_7    704.06      0.05     VOR_B                                                            
+   VOR_B_8    965.09      0.05     VOR_B                                                            
+   VOR_B_9    737.85      0.05     VOR_B                                                            
+  VOR_B_10    848.66      0.05     VOR_B                                                            
+  VOR_B_11      1003      0.05     VOR_B                                                            
+  VOR_B_12    559.26      0.05     VOR_B                                                            
+  VOR_B_13    936.66      0.05     VOR_B                                                            
+  VOR_B_14    987.01      0.05     VOR_B                                                            
+  VOR_B_15    834.96      0.05     VOR_B                                                            
+  VOR_B_16    547.25      0.05     VOR_B                                                            
+  VOR_B_17    511.58      0.05     VOR_B                                                            
+  VOR_B_18    300.26      0.05     VOR_B                                                            
+  VOR_B_19   1098.59      0.05     VOR_B                                                            
+  VOR_B_20    672.35      0.05     VOR_B                                                            
+  VOR_B_21     705.9      0.05     VOR_B                                                            
+  VOR_B_22     872.1      0.05     VOR_B                                                            
+* model command line                                                                                          
+C:\APEX1905_New\APEX1905_New\PEST\APEX.BAT                                                                                          
+* model input/output                                                                                          
+C:\APEX1905_New\APEX1905_New\PEST\par2par_soil.tpl     C:\APEX1905_New\APEX1905_New\PEST\par2par_soil.in                                                                                          
+C:\APEX1905_New\APEX1905_New\PEST\CPER_EXP.ins     C:\APEX1905_New\APEX1905_New\PEST\CONUNN_AGM.CMP                                                                                          

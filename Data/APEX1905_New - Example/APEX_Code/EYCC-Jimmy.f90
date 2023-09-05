@@ -1,0 +1,27 @@
+      SUBROUTINE EYCC(ISX)
+!     APEX1905
+!     THIS SUBPROGRAM ESTIMATES THE USLE C FACTOR BASED ON PLANT POP &
+!     BIOMASS & RESIDUE COVER
+      USE PARM
+      NN=NCP(IRO(ISX),ISX)
+      DO K1=1,NN
+          K=JE(K1,ISX)
+          IF(IDC(K)==NDC(3).OR.IDC(K)==NDC(6))IRP(ISX)=1
+      END DO
+      FRUF=MIN(1.,EXP(-.026*(RRUF(ISX)-6.1)))
+      IF(CVRS(ISX)<15.)THEN
+          FRSD=EXP(-PRMT(46)*CVRS(ISX))
+      ELSE
+          FRSD=.0001
+      END IF    
+      X1=MAX(FGC(ISX),FGSL(ISX))
+      FBIO=1.-X1*EXP(-PRMT(47)*CHMX(ISX))
+      IF(IRP(ISX)>0)THEN
+          FPPL=.9*(1.-CVP(ISX))+.1
+      ELSE
+          FPPL=1.
+      END IF
+      CVF(ISX)=FRSD*FBIO*FRUF*FPPL
+      CVF(ISX)=CVF(ISX)*EXP(-.03*ROK(LID(1,ISX),ISX))
+      RETURN
+      END

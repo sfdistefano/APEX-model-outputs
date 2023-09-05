@@ -1,0 +1,286 @@
+
+                       PEST RUN RECORD: CASE soil
+
+
+PEST Version: 13.0
+
+
+PEST run mode:-
+
+   Parameter estimation mode
+
+
+Case dimensions:-
+
+   Number of parameters                           :    10
+   Number of adjustable parameters                :    10
+   Number of parameter groups                     :     5
+   Number of observations                         :    22
+   Number of prior estimates                      :     0
+
+
+Model command line(s):-
+
+   C:\APEX1905_New\APEX1905_New\PEST\APEX.BAT
+
+
+Jacobian command line:-
+
+   na
+
+
+Model interface files:-
+
+   Templates:
+      C:\APEX1905_New\APEX1905_New\PEST\par2par_ulm.tpl
+   for model input files:
+      C:\APEX1905_New\APEX1905_New\PEST\par2par_ulm.in
+
+   (Parameter values written using single precision protocol.)
+   (Decimal point always included.)
+
+   Instruction files:
+      C:\APEX1905_New\APEX1905_New\PEST\CPER_EXP.ins
+   for reading model output files:
+      C:\APEX1905_New\APEX1905_New\PEST\CONUNN_AGM.CMP
+
+
+PEST-to-model message file:-
+
+   na
+
+
+Singular value decomposition:-
+
+   Perform SVD on XtQX or Q^(1/2)X               : XtQX
+   Max. number of singular values to employ      : 10
+   Ratio of lowest/highest singular value        :  1.000000E-03
+   Record eigenvectors in SVD file               : yes
+
+
+Derivatives calculation:-
+
+Param        Increment   Increment   Increment   Forward or   Multiplier  Method
+group        type                    low bound   central      (central)   (central)
+lg1          relative    1.0000E-02  1.0000E-03    switch       2.000     parabolic
+lg2          relative    0.1000      1.0000E-02    switch       2.000     parabolic
+lg3          relative    0.5000       5.000        switch       2.000     parabolic
+lg4          relative    1.0000E-03  1.0000E-04    switch       2.000     parabolic
+lg5          relative    1.0000E-04  1.0000E-05    switch       2.000     parabolic
+
+
+Parameter definitions:-
+
+Name         Trans-            Change       Initial        Lower          Upper
+             formation         limit        value          bound          bound
+uw1          log               factor     0.150000       8.000000E-02   0.230000    
+uw2          log               factor     0.150000       8.000000E-02   0.230000    
+uw3          log               factor     0.260000       0.130000       0.390000    
+uw4          log               factor     0.240000       0.120000       0.360000    
+uw5          log               factor     0.190000       0.100000       0.290000    
+fc1          log               factor     0.330000       0.170000       0.500000    
+fc2          log               factor     0.330000       0.170000       0.500000    
+fc3          log               factor     0.400000       0.200000       0.600000    
+fc4          log               factor     0.390000       0.200000       0.590000    
+fc5          log               factor     0.310000       0.160000       0.470000    
+
+Name         Group          Scale         Offset        Model command number
+uw1          lg1           1.00000        0.00000            1
+uw2          lg1           1.00000        0.00000            1
+uw3          lg1           1.00000        0.00000            1
+uw4          lg1           1.00000        0.00000            1
+uw5          lg1           1.00000        0.00000            1
+fc1          lg1           1.00000        0.00000            1
+fc2          lg1           1.00000        0.00000            1
+fc3          lg1           1.00000        0.00000            1
+fc4          lg1           1.00000        0.00000            1
+fc5          lg1           1.00000        0.00000            1
+
+
+Prior information:-
+
+   No prior information supplied
+
+
+Observations:-
+
+Observation name        Observation       Weight       Group
+ vor_b_1                 613.460         5.0000E-02   vor_b       
+ vor_b_2                 1417.08         5.0000E-02   vor_b       
+ vor_b_3                 941.250         5.0000E-02   vor_b       
+ vor_b_4                 838.330         5.0000E-02   vor_b       
+ vor_b_5                 1014.05         5.0000E-02   vor_b       
+ vor_b_6                 1142.10         5.0000E-02   vor_b       
+ vor_b_7                 704.060         5.0000E-02   vor_b       
+ vor_b_8                 965.090         5.0000E-02   vor_b       
+ vor_b_9                 737.850         5.0000E-02   vor_b       
+ vor_b_10                848.660         5.0000E-02   vor_b       
+ vor_b_11                1003.00         5.0000E-02   vor_b       
+ vor_b_12                559.260         5.0000E-02   vor_b       
+ vor_b_13                936.660         5.0000E-02   vor_b       
+ vor_b_14                987.010         5.0000E-02   vor_b       
+ vor_b_15                834.960         5.0000E-02   vor_b       
+ vor_b_16                547.250         5.0000E-02   vor_b       
+ vor_b_17                511.580         5.0000E-02   vor_b       
+ vor_b_18                300.260         5.0000E-02   vor_b       
+ vor_b_19                1098.59         5.0000E-02   vor_b       
+ vor_b_20                672.350         5.0000E-02   vor_b       
+ vor_b_21                705.900         5.0000E-02   vor_b       
+ vor_b_22                872.100         5.0000E-02   vor_b       
+
+
+Control settings:-
+
+   Initial lambda                                               :  10.000    
+   Lambda adjustment factor                                     :  2.0000    
+   Sufficient new/old phi ratio per optimisation iteration      : 0.30000    
+   Limiting relative phi reduction between lambdas              : 1.00000E-02
+   Maximum trial lambdas per iteration                          :  10
+   Forgive model run failure during lamda testing               : yes
+   Forgive model run failure during Jacobian runs               : yes
+
+   Perform Broyden's update of Jacobian matrix                  : no
+   Undertake observation re-referencing                         : no
+
+   Maximum  factor  parameter change (factor-limited changes)   :  5.0000
+   Maximum relative parameter change (relative-limited changes) : na
+   Fraction of initial parameter values used in computing
+   change limit for near-zero parameters                        : 1.00000E-03
+   Allow bending of parameter upgrade vector                    : no
+   Allow parameters to stick to their bounds                    : no
+
+   Relative phi reduction below which to begin use of
+   central derivatives                                          : 0.10000             
+   Iteration at which to first consider derivatives switch      :   1
+
+   Relative phi reduction indicating convergence                : 0.10000E-01
+   Number of phi values required within this range              :   3
+   Maximum number of consecutive failures to lower phi          :   3
+   Minimal relative parameter change indicating convergence     : 0.10000E-01
+   Number of consecutive iterations with minimal param change   :   3
+   Maximum number of optimisation iterations                    :   0
+
+   Attempt automatic user intervention                          : no
+
+   Attempt reuse of parameter sensitivities                     : no
+
+   Scale parameters by their bounds                             : no
+
+
+File saving options: -
+
+   Save best JCO file                                           : yes
+   Save multiple JCO files                                      : no
+   Save multiple REI files                                      : no
+   Save multiple PAR files                                      : no
+
+
+                            OPTIMISATION RECORD
+
+
+INITIAL CONDITIONS: 
+   Sum of squared weighted residuals (ie phi) =   6150.4    
+
+      Current parameter values
+      uw1             0.150000    
+      uw2             0.150000    
+      uw3             0.260000    
+      uw4             0.240000    
+      uw5             0.190000    
+      fc1             0.330000    
+      fc2             0.330000    
+      fc3             0.400000    
+      fc4             0.390000    
+      fc5             0.310000    
+
+   Optimisation complete: optimisation iteration limit of   0 realized.
+   Total model calls:      1
+
+
+                            OPTIMISATION RESULTS
+
+Covariance matrix and parameter confidence intervals cannot be determined:-
+Some form or regularisation was implemented so these are not applicable.
+
+
+Parameters ----->
+
+Parameter      Estimated value
+ uw1            0.150000    
+ uw2            0.150000    
+ uw3            0.260000    
+ uw4            0.240000    
+ uw5            0.190000    
+ fc1            0.330000    
+ fc2            0.330000    
+ fc3            0.400000    
+ fc4            0.390000    
+ fc5            0.310000    
+
+See file soil.sen for parameter sensitivities.
+
+
+Observations ----->
+
+Observation            Measured       Calculated     Residual       Weight     Group
+                       value          value
+vor_b_1                613.460        395.740        217.720       5.0000E-02  vor_b       
+vor_b_2                1417.08        1811.83       -394.750       5.0000E-02  vor_b       
+vor_b_3                941.250        1369.17       -427.920       5.0000E-02  vor_b       
+vor_b_4                838.330        1002.34       -164.010       5.0000E-02  vor_b       
+vor_b_5                1014.05        715.510        298.540       5.0000E-02  vor_b       
+vor_b_6                1142.10        1207.27       -65.1700       5.0000E-02  vor_b       
+vor_b_7                704.060        900.780       -196.720       5.0000E-02  vor_b       
+vor_b_8                965.090        1429.49       -464.400       5.0000E-02  vor_b       
+vor_b_9                737.850        1122.27       -384.420       5.0000E-02  vor_b       
+vor_b_10               848.660        560.420        288.240       5.0000E-02  vor_b       
+vor_b_11               1003.00        552.040        450.960       5.0000E-02  vor_b       
+vor_b_12               559.260        356.260        203.000       5.0000E-02  vor_b       
+vor_b_13               936.660        916.740        19.9200       5.0000E-02  vor_b       
+vor_b_14               987.010        916.010        71.0000       5.0000E-02  vor_b       
+vor_b_15               834.960        685.700        149.260       5.0000E-02  vor_b       
+vor_b_16               547.250        422.330        124.920       5.0000E-02  vor_b       
+vor_b_17               511.580        412.610        98.9700       5.0000E-02  vor_b       
+vor_b_18               300.260        270.670        29.5900       5.0000E-02  vor_b       
+vor_b_19               1098.59        1531.67       -433.080       5.0000E-02  vor_b       
+vor_b_20               672.350        1526.26       -853.910       5.0000E-02  vor_b       
+vor_b_21               705.900        1135.48       -429.580       5.0000E-02  vor_b       
+vor_b_22               872.100        1133.78       -261.680       5.0000E-02  vor_b       
+
+See file soil.res for more details of residuals in graph-ready format.
+
+See file soil.seo for composite observation sensitivities.
+
+
+Objective function ----->
+
+  Sum of squared weighted residuals (ie phi)                =   6150.    
+
+
+Correlation Coefficient ----->
+
+  Correlation coefficient                                   =  0.68153    
+
+
+Analysis of residuals ----->
+
+  All residuals:-
+     Number of residuals with non-zero weight                       =    22
+     Mean value of non-zero weighted residuals                      =  -4.826    
+     Maximum weighted residual [observation "vor_b_11"]             =   22.55    
+     Minimum weighted residual [observation "vor_b_20"]             =  -42.70    
+     Standard variance of weighted residuals                        =   512.5    
+     Standard error of weighted residuals                           =   22.64    
+
+     Note: the above variance was obtained by dividing the objective 
+     function by the number of system degrees of freedom (ie. number of 
+     observations with non-zero weight plus number of prior information 
+     articles with non-zero weight minus the number of adjustable parameters.)
+     If the degrees of freedom is negative the divisor becomes 
+     the number of observations with non-zero weight plus the number of 
+     prior information items with non-zero weight.
+
+
+Covariance and other statistical matrices cannot be determined:-
+Some form or regularisation was implemented so these are not applicable.
+
