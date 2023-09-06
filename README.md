@@ -11,6 +11,17 @@ Visualizations of biomass outputs from the APEX model and comparison to field da
   * A_DDM = plant daily growth after accounting for plant stress (Mg/ha)
   * BIOM = total above and belowground biomass, doesn't include dead material (Mg/ha)
   * X-XCM = volumetric water content between the specified depths
+
+* .CMP = simulated biomass output from APEX
+  * Only in PEST version of APEX, each run had a different set of parameter values derived from Montecarlo sampling
+  * CPNM2 = plant functional group
+  * CAGE_B = cage biomass (kg/ha), ungrazed clipped dry biomass
+  * VOR_B = visual obstruction reading, grazed biomass (kg/ha)
+  * Biomass = Field collected biomass (kg/ha) from CPER
+  * S_BIOMAS = Biomass simulated by APEX
+  * WTG = livestock weight gain
+     * ADWG = average daily weight gain (kg/animal)
+  * Summary statistics are provided for each run and data type
   
 * CPER = Central Plains Experimental Range (CPER), Nunn, CO, USA
 
