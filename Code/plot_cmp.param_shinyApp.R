@@ -279,7 +279,9 @@ server <- function(input, output) {
       geom_line(data = field01, 
                 aes(x = date, y = Biomass_fg, color = paste0(input$crop_plot, "-CPER"))) +
       geom_errorbar(data = field02, 
-                    aes(x = date, ymin = field01$Biomass_fg - se, ymax = field01$Biomass_fg + se, 
+                    aes(x = date, 
+                        ymin = field01$Biomass_fg - (se*2), 
+                        ymax = field01$Biomass_fg + (se*2), 
                         color = paste0(input$crop_plot, "-CPER")), 
                     width = 50) +
       theme_bw() +
